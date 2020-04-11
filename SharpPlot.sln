@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPLot", "SharpPLot\SharpPLot.csproj", "{BCCAD0A0-730A-45EA-A84F-69C7A8B593DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPlot.Unittest", "SharpPlot.Unittest\SharpPlot.Unittest.csproj", "{5B5E9C84-5FEC-464A-A67A-54A600BC7C47}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BCCAD0A0-730A-45EA-A84F-69C7A8B593DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCCAD0A0-730A-45EA-A84F-69C7A8B593DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCCAD0A0-730A-45EA-A84F-69C7A8B593DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCCAD0A0-730A-45EA-A84F-69C7A8B593DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B5E9C84-5FEC-464A-A67A-54A600BC7C47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B5E9C84-5FEC-464A-A67A-54A600BC7C47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B5E9C84-5FEC-464A-A67A-54A600BC7C47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B5E9C84-5FEC-464A-A67A-54A600BC7C47}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
