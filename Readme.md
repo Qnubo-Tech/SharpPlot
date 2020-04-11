@@ -1,9 +1,3 @@
----
-
-**Documentation**
-
----
-
 # SharpPlot
 
 SharpPlot is currently at the very beginning of the development cycle and aims to bring a proper wrapper of 
@@ -12,7 +6,7 @@ libraries in the Python's community, e.g. [MatPlotLib](https://matplotlib.org/).
 
 ## Requirements
 
-* [Gnuplot]
+* [Gnuplot](http://www.gnuplot.info/)
 
 ## Example
 
@@ -46,3 +40,12 @@ static void Main(string[] args)
         Gnuplot.Wait();      
 }
 ```
+Result:
+<p align="center">
+  <img src="https://github.com/migduroli/SharpPlot/blob/b86e02db97cd9d55543a53d2d7ffbb6af1952eeb/SharpPlot/examples/capture1.PNG?raw=true" alt='gnuplot1'>
+</p>
+
+<p align="center">
+  <img src="https://github.com/migduroli/SharpPlot/blob/b86e02db97cd9d55543a53d2d7ffbb6af1952eeb/SharpPlot/examples/capture2.PNG?raw=true" alt='gnuplot2'>
+</p>
+
