@@ -7,6 +7,7 @@ using System.Numerics;
 
 namespace SharpPlot
 {
+    
     public enum ChartType
     {
         TwoDimensional = 2,
@@ -82,12 +83,20 @@ namespace SharpPlot
         private static string _xLabel = "x";
         private static string _yLabel = "y";
         private static string _zLabel = "z";
-        
+
         public static void Start(string drive = "F", string rootFolder = @"Program Files\gnuplot\bin")
         {
-            
             string file = $@"{drive}:\{rootFolder}\{GnuplotStr}.exe";
-            _gnuplotInit(file);
+            _gnuplotInit(file: file);
+        }
+        public static void Start(string filePath)
+        {
+            _gnuplotInit(file: filePath);
+        }
+        
+        private static void _gnuplotInit(string file)
+        {
+            _gnuplotProcessInit(file);
             
             GnuplotCmd = GnuplotProcess.StandardInput;
             GnuplotCmd.WriteLine($"unset colorbox{Environment.NewLine}");
@@ -107,7 +116,7 @@ namespace SharpPlot
             _yRange = new double[] {-1, 1};
             
         }
-        private static void _gnuplotInit(string gnuplotFile)
+        private static void _gnuplotProcessInit(string gnuplotFile)
         {   
             GnuplotProcess = new Process
             {
