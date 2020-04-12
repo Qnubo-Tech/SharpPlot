@@ -10,7 +10,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Gnuplot.Start();
+        Gnuplot.Start(filePath: "/usr/local/bin/gnuplot");
         var x = Enumerable.Range(-100, 201).Select(z=>z*0.025*Math.PI).ToArray();
         
         var sinX = x.Select(Math.Sin).ToArray();
@@ -22,14 +22,15 @@ class Program
         Gnuplot.AddDatasetXY(x, sinX, "Test 1");
         Gnuplot.AddDatasetXY(x, sincosX, "Test 2");
         Gnuplot.AddDatasetXY(x, sincostanX, "Test 3");
-        Gnuplot.SetXRange(-2,2);
+        Gnuplot.Axis.SetXRange(-4,4);
+        Gnuplot.Axis.SetYRange(-2, 2);
         Gnuplot.PlotDatasetXY();
         Gnuplot.Wait();
 
         // Gnuplot Example 2:
         Gnuplot.CleanData();
-        Gnuplot.SetXRange(-8, 8);
-        Gnuplot.SetYRange(-1, 1);
+        Gnuplot.Axis.SetXRange(-8, 8);
+        Gnuplot.Axis.SetYRange(-1, 1);
         Gnuplot.SetXLabel("x");
         Gnuplot.SetYLabel("sin(x)");
         Gnuplot.AddDatasetXY(x, sinX, "sin(x)");

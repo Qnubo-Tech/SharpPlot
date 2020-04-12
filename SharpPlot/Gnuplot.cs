@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using SharpPlot.Canvas;
 
 namespace SharpPlot
 {
@@ -14,13 +15,6 @@ namespace SharpPlot
         ThreeDimensional = 3
     }
 
-    public enum Axis
-    {
-        X,
-        Y,
-        Z,
-    }
-    
     public class DataSet
     {
         public int NumberOfDimensions { get; private set; }
@@ -64,9 +58,8 @@ namespace SharpPlot
         private static Process GnuplotProcess;
         private static string _plotInit = Environment.NewLine + "plot '-' ";
 
-        private static double[] _xRange;
-        private static double[] _yRange;
-        
+        public static Axis Axis;
+
         private static List<double> VecX { get; set; }
         private static List<double> VecY { get; set; }
         private static List<double> _vecZ { get; set; }
@@ -111,10 +104,8 @@ namespace SharpPlot
             
             Legends = new List<string>();
             Colours = new List<int>();
-
-            _xRange = new double[] {-1, 1};
-            _yRange = new double[] {-1, 1};
             
+            Axis = new Axis();
         }
         private static void _gnuplotProcessInit(string gnuplotFile)
         {   
@@ -192,38 +183,6 @@ namespace SharpPlot
         public static void SetAutoscale(string axes)
         {
             WriteCommand($"set autoscale {axes}{Environment.NewLine}");
-        }
-
-        private static void _setRange(Axis axis = Axis.X)
-        {
-            var minMaxVec = _xRange;
-            var axisName = Axis.X.ToString().ToLower();
-            switch (axis)
-            {
-                case Axis.X:
-                    break;
-
-                case Axis.Y:
-                    axisName = Axis.Y.ToString().ToLower();
-                    minMaxVec = _yRange;
-                    break;
-            }
-            
-            WriteCommand($"set {axisName}range [{minMaxVec[0]}:{minMaxVec[1]}]{Environment.NewLine}");
-        }
-        
-        public static void SetXRange(double xMin, double xMax)
-        {
-            _xRange[0] = xMin;
-            _xRange[1] = xMax;
-            _setRange(axis: Axis.X);
-        }
-
-        public static void SetYRange(double yMin, double yMax)
-        {
-            _yRange[0] = yMin;
-            _yRange[1] = yMax;
-            _setRange(axis: Axis.Y);
         }
 
         private static void _setXLabel()
