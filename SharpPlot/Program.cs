@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Numerics;
@@ -22,8 +23,8 @@ class Program
         Gnuplot.AddDatasetXY(x, sinX, "Test 1");
         Gnuplot.AddDatasetXY(x, sincosX, "Test 2");
         Gnuplot.AddDatasetXY(x, sincostanX, "Test 3");
-        Gnuplot.Axis.SetXRange(-4,4);
-        Gnuplot.Axis.SetYRange(-2, 2);
+        Gnuplot.Axis.SetXTicks(new List<double>(){-8,-2, -1, 0, 1, 2, 8});
+        Gnuplot.Axis.SetYTicks(-2, 0.25, 2);
         Gnuplot.PlotDatasetXY();
         Gnuplot.Wait();
 
