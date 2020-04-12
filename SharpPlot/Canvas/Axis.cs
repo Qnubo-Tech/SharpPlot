@@ -16,6 +16,8 @@ namespace SharpPlot.Canvas
     {
         #region Attributes
         
+        private static int _defaultRangeTicks = 5;
+        
         private static double[] _xRange;
         private static double[] _yRange;
         private static double[] _zRange;
@@ -51,7 +53,7 @@ namespace SharpPlot.Canvas
         }
         #endregion
 
-        #region Range
+        #region Setters 
         private static void _setRange(double min, double max, Direction direction = Direction.X)
         {
             string axisName = "";
@@ -80,26 +82,6 @@ namespace SharpPlot.Canvas
             Gnuplot.WriteCommand($"set {axisName}range [{min}:{max}]{Environment.NewLine}");
         }
         
-        public void SetXRange(double xMin, double xMax)
-        {
-            _setRange(min:xMin, max:xMax, direction: Direction.X);
-        }
-
-        public void SetYRange(double yMin, double yMax)
-        {
-            _setRange(min: yMin, max: yMax, direction: Direction.Y);
-        }
-
-        public void SetZRange(double zMin, double zMax)
-        {
-            _setRange(min: zMin, max: zMax, direction: Direction.Z);
-        }
-
-        
-        #endregion
-
-        #region Ticks
-
         private static void _setTicks(IEnumerable<double> ticksValues, Direction direction = Direction.X)
         {
             string axisName = "";
@@ -123,7 +105,34 @@ namespace SharpPlot.Canvas
 
             Gnuplot.WriteCommand($"set {axisName}tics ({string.Join(",", ticksValues)})");
         }
+        #endregion
+        
+        #region Range
+        public void SetXRange(double xMin, double xMax)
+        {
+            _setRange(min:xMin, max:xMax, direction: Direction.X);
+            var ticks = Generate.LinearSpaced(_defaultRangeTicks, xMin, xMax);
+            _setTicks(ticksValues: ticks, direction: Direction.X);
+        }
 
+        public void SetYRange(double yMin, double yMax)
+        {
+            _setRange(min: yMin, max: yMax, direction: Direction.Y);
+            var ticks = Generate.LinearSpaced(_defaultRangeTicks, yMin, yMax);
+            _setTicks(ticksValues: ticks, direction: Direction.Y);
+        }
+
+        public void SetZRange(double zMin, double zMax)
+        {
+            _setRange(min: zMin, max: zMax, direction: Direction.Z);
+            var ticks = Generate.LinearSpaced(_defaultRangeTicks, zMin, zMax);
+            _setTicks(ticksValues: ticks, direction: Direction.Z);
+        }
+
+        
+        #endregion
+
+        #region Ticks
         public void SetXTicks(IEnumerable<double> ticks)
         {
             _setTicks(ticksValues: ticks, direction: Direction.X);
@@ -133,6 +142,13 @@ namespace SharpPlot.Canvas
         public void SetXTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
+            _setTicks(ticksValues: ticks, direction: Direction.X);
+            _setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
+        }
+
+        public void SetXTicks(double start, double stop, int num)
+        {
+            var ticks = Generate.LinearSpaced(num, start, stop);
             _setTicks(ticksValues: ticks, direction: Direction.X);
             _setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
         }
@@ -148,6 +164,12 @@ namespace SharpPlot.Canvas
             _setTicks(ticksValues: ticks, direction: Direction.Y);
             _setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
         }
+        public void SetYTicks(double start, double stop, int num)
+        {
+            var ticks = Generate.LinearSpaced(num, start, stop);
+            _setTicks(ticksValues: ticks, direction: Direction.Y);
+            _setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
+        }
         
         public void SetZTicks(IEnumerable<double> ticks)
         {
@@ -157,6 +179,12 @@ namespace SharpPlot.Canvas
         public void SetZTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
+            _setTicks(ticksValues: ticks, direction: Direction.Z);
+            _setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
+        }
+        public void SetZTicks(double start, double stop, int num)
+        {
+            var ticks = Generate.LinearSpaced(num, start, stop);
             _setTicks(ticksValues: ticks, direction: Direction.Z);
             _setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
         }

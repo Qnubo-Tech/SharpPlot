@@ -24,7 +24,9 @@ class Program
         Gnuplot.AddDatasetXY(x, sincosX, "Test 2");
         Gnuplot.AddDatasetXY(x, sincostanX, "Test 3");
         Gnuplot.Axis.SetXTicks(new List<double>(){-8,-2, -1, 0, 1, 2, 8});
-        Gnuplot.Axis.SetYTicks(-2, 0.25, 2);
+        Gnuplot.Axis.SetYTicks(start:-2, step:0.25, stop:2);
+        Gnuplot.Axis.SetYRange(-3, 3);
+        Gnuplot.Axis.SetYTicks(new List<double>(){-3, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 3});
         Gnuplot.PlotDatasetXY();
         Gnuplot.Wait();
 
