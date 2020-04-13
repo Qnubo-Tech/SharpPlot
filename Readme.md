@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="https://github.com/Qnubo-Tech/"><img src="Docs/logo-pre.png" alt='SharpPlot'></a>
+</p>
+
 # SharpPlot
 
 SharpPlot is currently at the very beginning of the development cycle and aims to bring a proper wrapper of 
