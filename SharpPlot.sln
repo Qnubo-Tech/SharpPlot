@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPLot", "SharpPLot\SharpPLot.csproj", "{BCCAD0A0-730A-45EA-A84F-69C7A8B593DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPlot", "SharpPlot\SharpPlot.csproj", "{BCCAD0A0-730A-45EA-A84F-69C7A8B593DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPlot.Unittest", "SharpPlot.Unittest\SharpPlot.Unittest.csproj", "{5B5E9C84-5FEC-464A-A67A-54A600BC7C47}"
 EndProject
