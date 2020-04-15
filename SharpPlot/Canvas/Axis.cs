@@ -105,6 +105,30 @@ namespace SharpPlot.Canvas
 
             Gnuplot.WriteCommand($"set {axisName}tics ({string.Join(",", ticksValues)})");
         }
+
+        private static void _addTicks(Dictionary<String, double> labelValues, Direction direction)
+        {
+            string axisName = "";
+            switch (direction)
+            {
+                case Direction.X:
+                    axisName = Direction.X.ToString().ToLower();
+                    break;
+
+                case Direction.Y:
+                    axisName = Direction.Y.ToString().ToLower();
+                    break;
+                
+                case Direction.Z:
+                    axisName = Direction.Z.ToString().ToLower();
+                    break;
+            }
+            
+            foreach (var kv in labelValues)
+            {
+                Gnuplot.WriteCommand($"set {axisName}tics add ('{kv.Key}' {kv.Value})");
+            }
+        }
         #endregion
         
         #region Range
@@ -132,7 +156,7 @@ namespace SharpPlot.Canvas
         
         #endregion
 
-        #region Ticks
+        #region SetTicks
         public void SetXTicks(IEnumerable<double> ticks)
         {
             _setTicks(ticksValues: ticks, direction: Direction.X);
@@ -188,6 +212,16 @@ namespace SharpPlot.Canvas
             _setTicks(ticksValues: ticks, direction: Direction.Z);
             _setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
         }
+        #endregion
+        
+        #region AddTicks
+
+        public void AddTicks(Dictionary<string, double> labelValues, int axis=0)
+        {
+            Direction direction = (Direction) axis;
+            _addTicks(labelValues: labelValues, direction: direction);
+        }
+        
         #endregion
 
         
