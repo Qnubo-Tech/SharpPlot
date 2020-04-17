@@ -25,6 +25,10 @@ namespace SharpPlot.Canvas
         private static IEnumerable<double> _xTicks;
         private static IEnumerable<double> _yTicks;
         private static IEnumerable<double> _zTicks;
+
+        private static string _xlabel;
+        private static string _ylabel;
+        private static string _zlabel;
         
         #endregion
 
@@ -38,6 +42,10 @@ namespace SharpPlot.Canvas
         public IEnumerable<double> YTicks => _yTicks;
         public IEnumerable<double> ZTicks => _zTicks;
 
+        public static string Xlabel => _xlabel;
+        public static string Ylabel => _ylabel;
+        public static string Zlabel => _zlabel;
+
         #endregion
 
         #region Constructors
@@ -50,6 +58,10 @@ namespace SharpPlot.Canvas
             _xTicks = Generate.LinearRange(-1, 0.5, 1);
             _yTicks = Generate.LinearRange(-1, 0.5, 1);
             _zTicks = Generate.LinearRange(-1, 0.5, 1);
+
+            _xlabel = "";
+            _ylabel = "";
+            _zlabel = "";
         }
         #endregion
 
@@ -129,6 +141,31 @@ namespace SharpPlot.Canvas
                 Gnuplot.WriteCommand($"set {axisName}tics add ('{kv.Key}' {kv.Value})");
             }
         }
+
+        private static void _setLabel(string label, int rotation=0,  Direction direction = Direction.X)
+        {
+            string axisName = "";
+            switch (direction)
+            {
+                case Direction.X:
+                    _xlabel = label;
+                    axisName = Direction.X.ToString().ToLower();
+                    break;
+
+                case Direction.Y:
+                    _ylabel = label;
+                    axisName = Direction.Y.ToString().ToLower();
+                    break;
+                
+                case Direction.Z:
+                    _zlabel = label;
+                    axisName = Direction.Z.ToString().ToLower();
+                    break;
+            }
+            
+            Gnuplot.WriteCommand($"set {axisName}label '{label}' rotate by {rotation}");
+            
+        }
         #endregion
         
         #region Range
@@ -156,7 +193,7 @@ namespace SharpPlot.Canvas
         
         #endregion
 
-        #region SetTicks
+        #region Ticks
         public void SetXTicks(IEnumerable<double> ticks)
         {
             _setTicks(ticksValues: ticks, direction: Direction.X);
@@ -222,6 +259,22 @@ namespace SharpPlot.Canvas
             _addTicks(labelValues: labelValues, direction: direction);
         }
         
+        #endregion
+        
+        #region Labels
+        public void SetXLabel(string label, int rotation = 0)
+        {
+            _setLabel(label: label, rotation: rotation, direction: Direction.X);
+        }
+        public void SetYLabel(string label, int rotation = 90)
+        { 
+            _setLabel(label, rotation: rotation, direction: Direction.Y);
+        }
+
+        public void SetZLabel(string label, int rotation = 90)
+        {
+            _setLabel(label, rotation: rotation, direction: Direction.Z);
+        }
         #endregion
 
         

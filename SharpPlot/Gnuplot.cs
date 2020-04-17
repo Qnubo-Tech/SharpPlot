@@ -184,26 +184,7 @@ namespace SharpPlot
         {
             WriteCommand($"set autoscale {axes}{Environment.NewLine}");
         }
-
-        private static void _setXLabel()
-        {
-            WriteCommand($"set xlabel '{_xLabel}'");
-        }
-        public static void SetXLabel(string label)
-        {
-            _xLabel = label;
-            _setXLabel();
-        }
         
-        private static void _setYLabel()
-        {
-            WriteCommand($"set ylabel '{_yLabel}'");
-        }
-        public static void SetYLabel(string label)
-        {
-            _yLabel = label;
-            _setYLabel();
-        }
         
         private static void _plotBegin()
         {

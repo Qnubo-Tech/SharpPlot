@@ -39,6 +39,8 @@ class Program
             {"-pi", -Math.PI}
         };
         Gnuplot.Axis.AddTicks(labelValues: yticks, axis: 1);
+        Gnuplot.Axis.SetXLabel(label: "x-axis", rotation: 20);
+        Gnuplot.Axis.SetYLabel(label: "y-axis");
         Gnuplot.PlotDatasetXY();
         Gnuplot.Wait();
 
@@ -46,8 +48,8 @@ class Program
         Gnuplot.CleanData();
         Gnuplot.Axis.SetXRange(-8, 8);
         Gnuplot.Axis.SetYRange(-1, 1);
-        Gnuplot.SetXLabel("x");
-        Gnuplot.SetYLabel("sin(x)");
+        Gnuplot.Axis.SetXLabel("x");
+        Gnuplot.Axis.SetYLabel("sin(x)");
         Gnuplot.AddDatasetXY(x, sinX, "sin(x)");
         Gnuplot.PlotDatasetXY(); 
         Gnuplot.Wait();
