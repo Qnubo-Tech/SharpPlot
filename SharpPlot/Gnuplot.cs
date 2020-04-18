@@ -73,10 +73,6 @@ namespace SharpPlot
 
         private static string _mOptions;
 
-        private static string _xLabel = "x";
-        private static string _yLabel = "y";
-        private static string _zLabel = "z";
-
         public static void Start(string drive = "F", string rootFolder = @"Program Files\gnuplot\bin")
         {
             string file = $@"{drive}:\{rootFolder}\{GnuplotStr}.exe";
