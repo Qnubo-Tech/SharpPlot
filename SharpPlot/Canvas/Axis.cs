@@ -21,12 +21,10 @@ namespace SharpPlot.Canvas
         private static AxisRange _xRange; 
         private static AxisRange _yRange; 
         private static AxisRange _zRange;
-        
-        private static AxisRange _xAxisRangeAtt;
 
-        private static IEnumerable<double> _xTicks;
-        private static IEnumerable<double> _yTicks;
-        private static IEnumerable<double> _zTicks;
+        private static AxisTicks _xTicks;
+        private static AxisTicks _yTicks;
+        private static AxisTicks _zTicks;
 
         private static string _xlabel;
         private static string _ylabel;
@@ -36,14 +34,13 @@ namespace SharpPlot.Canvas
 
         #region Properties
 
-        public double[] XRange
-        {
-            get => _xRange.Limits;
-        }
-
-        public IEnumerable<double> XTicks => _xTicks;
-        public IEnumerable<double> YTicks => _yTicks;
-        public IEnumerable<double> ZTicks => _zTicks;
+        public double[] XRange => _xRange.Limits;
+        public double[] YRange => _yRange.Limits;
+        public double[] ZRange => _zRange.Limits;
+        
+        public IEnumerable<double> XTicks => _xTicks.Values;
+        public IEnumerable<double> YTicks => _yTicks.Values;
+        public IEnumerable<double> ZTicks => _zTicks.Values;
 
         public static string Xlabel => _xlabel;
         public static string Ylabel => _ylabel;
@@ -58,9 +55,9 @@ namespace SharpPlot.Canvas
             _yRange = new AxisRange(Direction.Y);
             _zRange = new AxisRange(Direction.Z);
 
-            _xTicks = Generate.LinearRange(-1, 0.5, 1);
-            _yTicks = Generate.LinearRange(-1, 0.5, 1);
-            _zTicks = Generate.LinearRange(-1, 0.5, 1);
+            _xTicks = new AxisTicks();
+            _yTicks = new AxisTicks(Direction.Y);
+            _zTicks = new AxisTicks(Direction.Z);
 
             _xlabel = "";
             _ylabel = "";
@@ -69,31 +66,6 @@ namespace SharpPlot.Canvas
         #endregion
 
         #region Setters 
-        private static string _setTicks(IEnumerable<double> ticksValues, Direction direction = Direction.X)
-        {
-            string axisName = "";
-            switch (direction)
-            {
-                case Direction.X:
-                    _xTicks = ticksValues;
-                    axisName = Direction.X.ToString().ToLower();
-                    break;
-
-                case Direction.Y:
-                    _yTicks = ticksValues;
-                    axisName = Direction.Y.ToString().ToLower();
-                    break;
-                
-                case Direction.Z:
-                    _zTicks = ticksValues;
-                    axisName = Direction.Z.ToString().ToLower();
-                    break;
-            }
-
-            string command = $"set {axisName}tics ({string.Join(",", ticksValues)})";
-            
-            return command;
-        }
 
         private static void _addTicks(Dictionary<String, double> labelValues, Direction direction)
         {
@@ -146,7 +118,7 @@ namespace SharpPlot.Canvas
         #endregion
         
         #region Range
-        private static void _setRangAndTicksFromRange(double min, double max, AxisRange axisRange)
+        private void _setRangeAndTicksFromRange(double min, double max, AxisRange axisRange)
         {
             var rangeCommand = axisRange.SetRange(min: min, max: max);
             Gnuplot.WriteCommand(rangeCommand);
@@ -158,75 +130,82 @@ namespace SharpPlot.Canvas
         
         public void SetXRange(double xMin, double xMax)
         {
-            _setRangAndTicksFromRange(min: xMin, max: xMax, axisRange: _xRange);
+            _setRangeAndTicksFromRange(min: xMin, max: xMax, axisRange: _xRange);
         }
 
         public void SetYRange(double yMin, double yMax)
         {
-            _setRangAndTicksFromRange(min: yMin, max: yMax, axisRange: _yRange);
+            _setRangeAndTicksFromRange(min: yMin, max: yMax, axisRange: _yRange);
         }
 
         public void SetZRange(double zMin, double zMax)
         {
-            _setRangAndTicksFromRange(min: zMin, max: zMax, axisRange: _zRange);
+            _setRangeAndTicksFromRange(min: zMin, max: zMax, axisRange: _zRange);
         }
         
         #endregion
 
         #region Ticks
+
+        private void _setTicks(IEnumerable<double> ticksValues, AxisTicks axisTicks)
+        {
+            var ticksCommand = axisTicks.SetTicks(ticksValues);
+            Gnuplot.WriteCommand(ticksCommand);
+        }
+        
         public void SetXTicks(IEnumerable<double> ticks)
         {
-            _setTicks(ticksValues: ticks, direction: Direction.X);
+            _setTicks(ticksValues: ticks, axisTicks: _xTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
         }
 
         public void SetXTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
-            _setTicks(ticksValues: ticks, direction: Direction.X);
+            _setTicks(ticksValues: ticks, axisTicks: _xTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
         }
 
         public void SetXTicks(double start, double stop, int num)
         {
             var ticks = Generate.LinearSpaced(num, start, stop);
-            _setTicks(ticksValues: ticks, direction: Direction.X);
+            _setTicks(ticksValues: ticks, axisTicks: _xTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
         }
         
         public void SetYTicks(IEnumerable<double> ticks)
         {
-            _setTicks(ticksValues: ticks, direction: Direction.Y);
+            _setTicks(ticksValues: ticks, axisTicks: _yTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
         }
         public void SetYTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
-            _setTicks(ticksValues: ticks, direction: Direction.Y);
+            _setTicks(ticksValues: ticks, axisTicks: _yTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
         }
         public void SetYTicks(double start, double stop, int num)
         {
             var ticks = Generate.LinearSpaced(num, start, stop);
-            _setTicks(ticksValues: ticks, direction: Direction.Y);
+            _setTicks(ticksValues: ticks, axisTicks: _yTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
         }
         
         public void SetZTicks(IEnumerable<double> ticks)
         {
-            _setTicks(ticksValues: ticks, direction: Direction.Z);
+            _setTicks(ticksValues: ticks, axisTicks: _zTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
         }
         public void SetZTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
-            _setTicks(ticksValues: ticks, direction: Direction.Z);
+            _setTicks(ticksValues: ticks, axisTicks: _zTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
         }
         public void SetZTicks(double start, double stop, int num)
         {
             var ticks = Generate.LinearSpaced(num, start, stop);
-            _setTicks(ticksValues: ticks, direction: Direction.Z);
+            _setTicks(ticksValues: ticks, axisTicks: _zTicks);
             //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
         }
         #endregion
@@ -268,13 +247,7 @@ namespace SharpPlot.Canvas
         #endregion
         
         #region Properties
-
-        public double[] Limits
-        {
-            get => _limits;
-            set => _limits = value;
-        }
-
+        public double[] Limits => _limits;
         #endregion
 
         #region Constructors
@@ -304,7 +277,7 @@ namespace SharpPlot.Canvas
             _limits[0] = min;
             _limits[1] = max;
             
-            string command = $"set {axisName}range [{min}:{max}]{Environment.NewLine}";
+            var command = $"set {axisName}range [{_limits[0]}:{_limits[1]}]{Environment.NewLine}";
 
             return command;
         }
@@ -313,9 +286,62 @@ namespace SharpPlot.Canvas
         {
             if (min >= max)
             {
-                throw new System.ArgumentException($"{min} is not lower than {max}");
+                throw new ArgumentException($"{min} is not lower than {max}");
             }
             return _setRange(min: min, max: max);
+        }
+        
+    }
+
+    public class AxisTicks
+    {
+        #region Attributes
+        private IEnumerable<double> _values;
+        private Direction _direction;
+        #endregion
+
+        #region Properties
+        public IEnumerable<double> Values => _values;
+        #endregion
+
+        #region Cttors
+
+        public AxisTicks()
+        {
+           _values = Generate.LinearRange(-1, 0.5, 1);
+           _direction = Direction.X;
+        }
+
+        public AxisTicks(Direction direction)
+        {
+            _values = Generate.LinearRange(-1, 0.5, 1);
+            _direction = direction;
+        }
+
+        public AxisTicks(IEnumerable<double> ticksValues, Direction direction)
+        {
+            _values = ticksValues;
+            _direction = direction;
+        }
+        #endregion
+
+        private string _setTicks(IEnumerable<double> ticksValues)
+        {
+            string axisName = _direction.ToString().ToLower();
+            _values = ticksValues.OrderBy(e => e);
+
+            var command = $"set {axisName}tics ({string.Join(",", _values)})";
+
+            return command;
+        }
+
+        public string SetTicks(IEnumerable<double> ticksValues)
+        {
+            if (!ticksValues.Any())
+            {
+                throw new ArgumentException($"ticksValues cannot be empty");
+            }
+            return _setTicks(ticksValues: ticksValues);
         }
         
     }

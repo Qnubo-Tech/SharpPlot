@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using MathNet.Numerics;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using SharpPlot.Canvas;
@@ -54,7 +56,7 @@ namespace SharpPlot.UnitTest
         }
         
         [Test]
-        public void MethodTest()
+        public void TestWrongRange()
         {
             var ex = Assert.Throws<ArgumentException>(() => _axisRangeCompleteCttr.SetRange(10, -10));
             var expectedMessage = "10 is not lower than -10";
@@ -62,5 +64,68 @@ namespace SharpPlot.UnitTest
 
         }
 
+    }
+
+    public class TestAxisTicks
+    {
+        private AxisTicks _axisTicksDefault;
+        private AxisTicks _axisTicksCompleteCttr;
+        
+        [SetUp]
+        public void SetUp()
+        {
+            _axisTicksDefault = new AxisTicks();
+            var ticksValues = Generate.LinearRange(-2, 0.5, 2);
+            _axisTicksCompleteCttr = new AxisTicks(ticksValues, Direction.Z);
+        }
+        
+        [Test]
+        public void TestDefaultCttr()
+        {
+            var ticksValues = new double[] {-1, -0.5, 0, 0.5, 1};
+            Assert.AreEqual(ticksValues, _axisTicksDefault.Values);
+        }
+
+        [Test]
+        public void TestCompleteCttr()
+        {
+            var ticksValues = new double[] {-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2};
+            Assert.AreEqual(ticksValues, _axisTicksCompleteCttr.Values);
+        }
+
+        [Test]
+        public void TestSetTicks()
+        {
+            var ticksValues = Generate.LinearRange(0, 1, 5);
+            var actual = _axisTicksCompleteCttr.SetTicks(ticksValues);
+            var expected = "set ztics (0,1,2,3,4,5)";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestUnsortedTicks()
+        {
+            var ticksValues = new double[] {5, 4, 0, 2, 1, 3};
+            var actual = _axisTicksCompleteCttr.SetTicks(ticksValues);
+            var expected = "set ztics (0,1,2,3,4,5)";
+
+            Assert.AreEqual(expected, actual);
+            
+        }
+
+        [Test]
+        public void TestEmptyTicksValues()
+        {
+            
+            var ticksValues = new List<double>();
+            var ex = Assert.Throws<ArgumentException>(() => _axisTicksCompleteCttr.SetTicks(ticksValues));
+            var expectedMessage = "ticksValues cannot be empty";
+
+            Assert.AreEqual(expectedMessage, ex.Message);
+        }
+        
+        
+        
     }
 }
