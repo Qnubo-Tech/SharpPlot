@@ -26,9 +26,9 @@ namespace SharpPlot.Canvas
         private static AxisTicks _yTicks;
         private static AxisTicks _zTicks;
 
-        private static string _xlabel;
-        private static string _ylabel;
-        private static string _zlabel;
+        private static AxisLabel _xlabel;
+        private static AxisLabel _ylabel;
+        private static AxisLabel _zlabel;
         
         #endregion
 
@@ -42,9 +42,9 @@ namespace SharpPlot.Canvas
         public IEnumerable<double> YTicks => _yTicks.Values;
         public IEnumerable<double> ZTicks => _zTicks.Values;
 
-        public static string Xlabel => _xlabel;
-        public static string Ylabel => _ylabel;
-        public static string Zlabel => _zlabel;
+        public string Xlabel => _xlabel.Label;
+        public string Ylabel => _ylabel.Label;
+        public string Zlabel => _zlabel.Label;
 
         #endregion
 
@@ -59,13 +59,24 @@ namespace SharpPlot.Canvas
             _yTicks = new AxisTicks(Direction.Y);
             _zTicks = new AxisTicks(Direction.Z);
 
-            _xlabel = "";
-            _ylabel = "";
-            _zlabel = "";
+            _xlabel = new AxisLabel();
+            _ylabel = new AxisLabel(Direction.Y);
+            _zlabel = new AxisLabel(Direction.Z);
         }
         #endregion
 
-        #region Setters 
+        #region SettersAndCommands 
+        private void _setRange(double min, double max, AxisRange axisRange)
+        {
+            var rangeCommand = axisRange.SetRange(min: min, max: max);
+            Gnuplot.WriteCommand(rangeCommand);
+        }
+        
+        private void _setTicks(IEnumerable<double> ticksValues, AxisTicks axisTicks)
+        {
+            var ticksCommand = axisTicks.SetTicks(ticksValues: ticksValues);
+            Gnuplot.WriteCommand(ticksCommand);
+        }
 
         private static void _addTicks(Dictionary<String, double> labelValues, Direction direction)
         {
@@ -91,148 +102,115 @@ namespace SharpPlot.Canvas
             }
         }
 
-        private static void _setLabel(string label, int rotation=0,  Direction direction = Direction.X)
+        private static void _setLabel(string label, int rotation, AxisLabel axisLabel)
         {
-            string axisName = "";
-            switch (direction)
-            {
-                case Direction.X:
-                    _xlabel = label;
-                    axisName = Direction.X.ToString().ToLower();
-                    break;
-
-                case Direction.Y:
-                    _ylabel = label;
-                    axisName = Direction.Y.ToString().ToLower();
-                    break;
-                
-                case Direction.Z:
-                    _zlabel = label;
-                    axisName = Direction.Z.ToString().ToLower();
-                    break;
-            }
-            
-            Gnuplot.WriteCommand($"set {axisName}label '{label}' rotate by {rotation}");
-            
+            var labelCommand = axisLabel.SetLabel(label: label, rotation: rotation);
+            Gnuplot.WriteCommand(labelCommand);
         }
         #endregion
         
         #region Range
-        private void _setRangeAndTicksFromRange(double min, double max, AxisRange axisRange)
-        {
-            var rangeCommand = axisRange.SetRange(min: min, max: max);
-            Gnuplot.WriteCommand(rangeCommand);
-            
-/*            var ticks = Generate.LinearSpaced(_defaultRangeTicks, min, max);
-            var ticksCommand = _setTicks(ticksValues: ticks, direction: direction);
-            Gnuplot.WriteCommand(ticksCommand);*/
-        }
-        
         public void SetXRange(double xMin, double xMax)
         {
-            _setRangeAndTicksFromRange(min: xMin, max: xMax, axisRange: _xRange);
+            _setRange(min: xMin, max: xMax, axisRange: _xRange);
+            var ticksValues = Generate.LinearSpaced(_defaultRangeTicks, xMin, xMax);
+            _setTicks(ticksValues: ticksValues, axisTicks: _xTicks);
         }
 
         public void SetYRange(double yMin, double yMax)
         {
-            _setRangeAndTicksFromRange(min: yMin, max: yMax, axisRange: _yRange);
+            _setRange(min: yMin, max: yMax, axisRange: _yRange);
+            var ticksValues = Generate.LinearSpaced(_defaultRangeTicks, yMin, yMax);
+            _setTicks(ticksValues: ticksValues, axisTicks: _yTicks);
         }
 
         public void SetZRange(double zMin, double zMax)
         {
-            _setRangeAndTicksFromRange(min: zMin, max: zMax, axisRange: _zRange);
+            _setRange(min: zMin, max: zMax, axisRange: _zRange);
+            var ticksValues = Generate.LinearSpaced(_defaultRangeTicks, zMin, zMax);
+            _setTicks(ticksValues: ticksValues, axisTicks: _zTicks);
         }
-        
         #endregion
 
         #region Ticks
-
-        private void _setTicks(IEnumerable<double> ticksValues, AxisTicks axisTicks)
-        {
-            var ticksCommand = axisTicks.SetTicks(ticksValues);
-            Gnuplot.WriteCommand(ticksCommand);
-        }
-        
         public void SetXTicks(IEnumerable<double> ticks)
         {
             _setTicks(ticksValues: ticks, axisTicks: _xTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _xRange);
         }
 
         public void SetXTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
             _setTicks(ticksValues: ticks, axisTicks: _xTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _xRange);
         }
 
         public void SetXTicks(double start, double stop, int num)
         {
             var ticks = Generate.LinearSpaced(num, start, stop);
             _setTicks(ticksValues: ticks, axisTicks: _xTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.X);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _xRange);
         }
         
         public void SetYTicks(IEnumerable<double> ticks)
         {
             _setTicks(ticksValues: ticks, axisTicks: _yTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _yRange);
         }
         public void SetYTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
             _setTicks(ticksValues: ticks, axisTicks: _yTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _yRange);
         }
         public void SetYTicks(double start, double stop, int num)
         {
             var ticks = Generate.LinearSpaced(num, start, stop);
             _setTicks(ticksValues: ticks, axisTicks: _yTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Y);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _yRange);
         }
         
         public void SetZTicks(IEnumerable<double> ticks)
         {
             _setTicks(ticksValues: ticks, axisTicks: _zTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _zRange);
         }
         public void SetZTicks(double start, double step, double stop)
         {
             var ticks = Generate.LinearRange(start, step, stop);
             _setTicks(ticksValues: ticks, axisTicks: _zTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _zRange);
         }
         public void SetZTicks(double start, double stop, int num)
         {
             var ticks = Generate.LinearSpaced(num, start, stop);
             _setTicks(ticksValues: ticks, axisTicks: _zTicks);
-            //_setRange(min: ticks.Min(), max: ticks.Max(), direction: Direction.Z);
+            _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _zRange);
         }
         #endregion
         
         #region AddTicks
-
         public void AddTicks(Dictionary<string, double> labelValues, int axis=0)
         {
             Direction direction = (Direction) axis;
             _addTicks(labelValues: labelValues, direction: direction);
         }
-        
         #endregion
         
         #region Labels
         public void SetXLabel(string label, int rotation = 0)
         {
-            _setLabel(label: label, rotation: rotation, direction: Direction.X);
+            _setLabel(label: label, rotation: rotation, axisLabel: _xlabel);
         }
         public void SetYLabel(string label, int rotation = 90)
         { 
-            _setLabel(label, rotation: rotation, direction: Direction.Y);
+            _setLabel(label, rotation: rotation, axisLabel: _ylabel);
         }
 
         public void SetZLabel(string label, int rotation = 90)
         {
-            _setLabel(label, rotation: rotation, direction: Direction.Z);
+            _setLabel(label, rotation: rotation, axisLabel: _zlabel);
         }
         #endregion
 
@@ -344,5 +322,69 @@ namespace SharpPlot.Canvas
             return _setTicks(ticksValues: ticksValues);
         }
         
+    }
+
+    public class AxisLabel
+    {
+        #region Attributes
+        private string _label;
+        private Direction _direction;
+        private int _rotation;
+        #endregion
+        
+        #region Properties
+        public string Label
+        {
+            get => _label;
+            set => _label = value;
+        }
+
+        public int Rotation
+        {
+            get => _rotation;
+            set => _rotation = value;
+        }
+
+        #endregion
+        
+        #region Cttos
+        public AxisLabel()
+        {
+            _label = "";
+            _direction = Direction.X;
+            _rotation = 0;
+        }
+
+        public AxisLabel(Direction direction)
+        {
+            _label = "";
+            _direction = direction;
+            _rotation = 0;
+        }
+
+        public AxisLabel(string label, Direction direction)
+        {
+            _label = label;
+            _direction = direction;
+            _rotation = 0;
+        }
+        #endregion
+
+        private string _setLabel(string label, int rotation)
+        {
+            string axisName = _direction.ToString().ToLower();
+            _label = label;
+            _rotation = rotation;
+
+            var command = $"set {axisName}label '{_label}' rotate by {_rotation}";
+
+            return command;
+        }
+
+        public string SetLabel(string label, int rotation)
+        {
+            return _setLabel(label: label, rotation: rotation);
+        }
+
     }
 }

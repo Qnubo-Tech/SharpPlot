@@ -124,8 +124,42 @@ namespace SharpPlot.UnitTest
 
             Assert.AreEqual(expectedMessage, ex.Message);
         }
-        
-        
+    }
+
+    public class TestAxisLabel
+    {
+        private AxisLabel _axisLabelDefault;
+        private AxisLabel _axisLabelCompleteCttr;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _axisLabelDefault = new AxisLabel();
+            _axisLabelCompleteCttr = new AxisLabel(label: "Label", direction: Direction.Z);
+        }
+
+        [Test]
+        public void TestDefaultCttr()
+        {
+            Assert.AreEqual("", _axisLabelDefault.Label);
+        }
+
+        [Test]
+        public void TestCompleteCttr()
+        {
+            Assert.AreEqual("Label", _axisLabelCompleteCttr.Label);
+        }
+
+        [Test]
+        public void TestSetLabel()
+        {
+            var label = "NewLabel";
+            var rotation = 45;
+            var actual = _axisLabelCompleteCttr.SetLabel(label: label, rotation: rotation);
+            var expected = "set zlabel 'NewLabel' rotate by 45";
+            
+            Assert.AreEqual(expected, actual);
+        }
         
     }
 }
