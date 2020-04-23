@@ -78,27 +78,13 @@ namespace SharpPlot.Canvas
             Gnuplot.WriteCommand(ticksCommand);
         }
 
-        private static void _addTicks(Dictionary<String, double> labelValues, Direction direction)
+        private static void _addTicks(Dictionary<String, double> labelValues, AxisTicks axisTicks)
         {
-            string axisName = "";
-            switch (direction)
-            {
-                case Direction.X:
-                    axisName = Direction.X.ToString().ToLower();
-                    break;
+            List<string> commands = axisTicks.AddTicks(labelValues);
 
-                case Direction.Y:
-                    axisName = Direction.Y.ToString().ToLower();
-                    break;
-                
-                case Direction.Z:
-                    axisName = Direction.Z.ToString().ToLower();
-                    break;
-            }
-            
-            foreach (var kv in labelValues)
+            for (int i = 0; i < commands.Count; i++)
             {
-                Gnuplot.WriteCommand($"set {axisName}tics add ('{kv.Key}' {kv.Value})");
+                Gnuplot.WriteCommand(commands[i]);
             }
         }
 
@@ -194,7 +180,23 @@ namespace SharpPlot.Canvas
         public void AddTicks(Dictionary<string, double> labelValues, int axis=0)
         {
             Direction direction = (Direction) axis;
-            _addTicks(labelValues: labelValues, direction: direction);
+            AxisTicks axisTicks;
+            switch (direction)
+            {
+                case Direction.X:
+                    axisTicks = _xTicks;
+                    break;
+                case Direction.Y:
+                    axisTicks = _yTicks;
+                    break;
+                case Direction.Z:
+                    axisTicks = _zTicks;
+                    break;
+                default:
+                    throw new ArgumentException($"axis={axis} is not a valid axis number");
+            }
+            
+            _addTicks(labelValues: labelValues, axisTicks: axisTicks);
         }
         #endregion
         
@@ -279,7 +281,7 @@ namespace SharpPlot.Canvas
         #endregion
 
         #region Properties
-        public IEnumerable<double> Values => _values;
+        public IEnumerable<double> Values => _values.OrderBy(e => e);
         #endregion
 
         #region Cttors
@@ -313,6 +315,23 @@ namespace SharpPlot.Canvas
             return command;
         }
 
+        private List<string> _addTicks(Dictionary<string, double> labelValues)
+        {
+            string axisName = _direction.ToString().ToLower();
+
+            var commands = new List<string>();
+            var enumerable = _values.ToList();
+            foreach (var kv in labelValues)
+            {
+                enumerable.Add(kv.Value);
+                commands.Add($"set {axisName}tics add ('{kv.Key}' {kv.Value})");
+            }
+            
+            _values = enumerable;
+
+            return commands;
+        }
+
         public string SetTicks(IEnumerable<double> ticksValues)
         {
             if (!ticksValues.Any())
@@ -320,6 +339,11 @@ namespace SharpPlot.Canvas
                 throw new ArgumentException($"ticksValues cannot be empty");
             }
             return _setTicks(ticksValues: ticksValues);
+        }
+
+        public List<string> AddTicks(Dictionary<string, double> labelValues)
+        {
+            return _addTicks(labelValues: labelValues);
         }
         
     }

@@ -117,13 +117,53 @@ namespace SharpPlot.UnitTest
         [Test]
         public void TestEmptyTicksValues()
         {
-            
             var ticksValues = new List<double>();
             var ex = Assert.Throws<ArgumentException>(() => _axisTicksCompleteCttr.SetTicks(ticksValues));
             var expectedMessage = "ticksValues cannot be empty";
 
             Assert.AreEqual(expectedMessage, ex.Message);
         }
+
+        [Test]
+        public void TestAddTicksOneElement()
+        {
+            var labelValues = new Dictionary<string, double>()
+            {
+                {"pi", 3.14}
+            };
+            var commands = _axisTicksCompleteCttr.AddTicks(labelValues: labelValues);
+            
+            var expectedCommands = new List<string>(){"set ztics add ('pi' 3.14)"};
+            var expectedValues = new double[] {-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 3.14};
+            
+            Assert.AreEqual(expectedCommands, commands);
+            Assert.AreEqual(expectedValues, _axisTicksCompleteCttr.Values);
+        }
+
+        [Test]
+        public void TestAddTicksMultipleElements()
+        {
+            var labelValues = new Dictionary<string, double>()
+            {
+                {"pi", 3.14},
+                {"phi", 1.618},
+                {"-e", -2.71}
+            };
+            
+            var commands = _axisTicksCompleteCttr.AddTicks(labelValues: labelValues);
+            
+            var expectedCommands = new List<string>()
+            {
+                "set ztics add ('pi' 3.14)",
+                "set ztics add ('phi' 1.618)",
+                "set ztics add ('-e' -2.71)",
+            };
+            var expectedValues = new double[] {-2.71, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 1.618, 2, 3.14};;
+            
+            Assert.AreEqual(expectedCommands, commands);
+            Assert.AreEqual(expectedValues, _axisTicksCompleteCttr.Values);
+        }
+        
     }
 
     public class TestAxisLabel
