@@ -59,6 +59,7 @@ namespace SharpPlot
         private static string _plotInit = Environment.NewLine + "plot '-' ";
 
         public static Axis Axis;
+        private static Scatter _scatter;
 
         private static List<double> VecX { get; set; }
         private static List<double> VecY { get; set; }
@@ -163,6 +164,11 @@ namespace SharpPlot
             Legends.Add($"title '{title}'");
         }
 
+        public static void PlotScatter(IEnumerable<double> x, IEnumerable<double> y, string title)
+        {
+            _scatter = new Scatter(x: x, y: y, title: title);
+        }
+
         public static void AddLegend(string title)
         {
             Legends.Add($"title '{title}'");
@@ -216,7 +222,7 @@ namespace SharpPlot
 
         private static void _plot_xy(double x, double y, int colour)
         {
-            WriteCommand($"{x} {y} {colour}{Environment.NewLine}");
+            WriteCommand($"{x} {y} {colour}");
         }
 
         private static void _plotUpdate()
@@ -243,6 +249,12 @@ namespace SharpPlot
                 _plotEnd();
             }
             _plotUpdate();
+        }
+
+        //TODO: Refactor Plot() to allow multiple Shapes in the same graph
+        public static void Show()
+        {
+            _scatter.Plot();
         }
 
         public static void Wait()
