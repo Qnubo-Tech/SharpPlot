@@ -253,8 +253,12 @@ namespace SharpPlot
 
         //TODO: Refactor Plot() to allow multiple Shapes in the same graph
         public static void Show()
-        {
-            _scatter.Plot();
+        { 
+            WriteCommand(_scatter.HeaderPlot);
+            foreach (var dataPoint in _scatter.DataPoints)
+            {
+                WriteCommand(dataPoint);
+            }
         }
 
         public static void Wait()

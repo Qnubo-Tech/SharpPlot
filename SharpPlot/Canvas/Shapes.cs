@@ -18,6 +18,11 @@ namespace SharpPlot.Canvas
         private static List<double> _arrY;
 
         #endregion
+        
+        #region Properties
+        public string HeaderPlot => _getHeaderPlot();
+        public List<string> DataPoints => _streamPoints(); 
+        #endregion
 
         #region Constructors
         public Scatter(IEnumerable<double> x, IEnumerable<double> y, string title)
@@ -29,34 +34,38 @@ namespace SharpPlot.Canvas
         #endregion
 
         #region Methods
+
+        private string _getHeaderPlot()
+        {
+            return PlotInit + _options + $"title '{_title}' " + Environment.NewLine;
+        } 
         private void _plotBegin()
         {
             var command = PlotInit + _options + $"title '{_title}' " + Environment.NewLine;
             Gnuplot.WriteCommand(command);
         }
 
-        private List<string> _generateCommandsFromPoints()
+        private List<string> _streamPoints()
         {
             var commands = new List<string>();
             for (int Idx = 0; Idx < _arrX.Count; Idx++)
             {
                 commands.Add($"{_arrX[Idx]} {_arrY[Idx]}");
             }
+            
+            commands.Add("e" + Environment.NewLine);
 
             return commands;
         }
         
         private void _plotFromStdin()
         {
-            List<string> commands = _generateCommandsFromPoints();
+            List<string> commands = _streamPoints();
             
             for (int i = 0; i < commands.Count; i++)
             {
                 Gnuplot.WriteCommand(commands[i]);
             }
-
-            var endCommand = "e" + Environment.NewLine;
-            Gnuplot.WriteCommand(endCommand);
         }
         
         public void Plot()
