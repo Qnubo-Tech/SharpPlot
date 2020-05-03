@@ -58,10 +58,10 @@ static void Main(string[] args)
 ```
 Result:
 <p align="center">
-  <img src="https://github.com/migduroli/SharpPlot/blob/b86e02db97cd9d55543a53d2d7ffbb6af1952eeb/SharpPlot/examples/capture1.PNG?raw=true" alt='gnuplot1'>
+  <img src="https://github.com/Qnubo-Tech/SharpPlot/blob/develop/SharpPlot/examples/capture1.PNG?raw=true" alt='gnuplot1'>
 </p>
 
 <p align="center">
-  <img src="https://github.com/migduroli/SharpPlot/blob/b86e02db97cd9d55543a53d2d7ffbb6af1952eeb/SharpPlot/examples/capture2.PNG?raw=true" alt='gnuplot2'>
+  <img src="https://github.com/Qnubo-Tech/SharpPlot/blob/develop/SharpPlot/examples/capture2.PNG?raw=true" alt='gnuplot2'>
 </p>
 
