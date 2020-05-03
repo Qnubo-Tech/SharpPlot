@@ -4,18 +4,19 @@ using System.Linq;
 
 namespace SharpPlot.Canvas
 {
-    public class Scatter
+
+    public class Figure
     {
         #region Attributes
 
-        private static readonly string PlotInit = Environment.NewLine + "plot '-' ";
+        private const string PlotInit = " '-' ";
 
-        private static readonly string _options = "u 1:2 with points pt 7";
+        protected string Options;
 
-        private static string _title;
+        protected string Title;
 
-        private static List<double> _arrX;
-        private static List<double> _arrY;
+        protected List<double> ArrX;
+        protected List<double> ArrY;
 
         #endregion
         
@@ -23,34 +24,31 @@ namespace SharpPlot.Canvas
         public string HeaderPlot => _getHeaderPlot();
         public List<string> DataPoints => _streamPoints(); 
         #endregion
-
+        
         #region Constructors
-        public Scatter(IEnumerable<double> x, IEnumerable<double> y, string title)
-        {
-            _arrX = x.ToList();
-            _arrY = y.ToList();
-            _title = title;
-        }
-        #endregion
 
+        public Figure(){}
+        
+        #endregion
+        
         #region Methods
 
         private string _getHeaderPlot()
         {
-            return PlotInit + _options + $"title '{_title}' " + Environment.NewLine;
+            return PlotInit + Options + $" title '{Title}' ";
         } 
         private void _plotBegin()
         {
-            var command = PlotInit + _options + $"title '{_title}' " + Environment.NewLine;
+            var command = PlotInit + Options + $" title '{Title}' ";
             Gnuplot.WriteCommand(command);
         }
 
         private List<string> _streamPoints()
         {
             var commands = new List<string>();
-            for (int Idx = 0; Idx < _arrX.Count; Idx++)
+            for (int Idx = 0; Idx < ArrX.Count; Idx++)
             {
-                commands.Add($"{_arrX[Idx]} {_arrY[Idx]}");
+                commands.Add($"{ArrX[Idx]} {ArrY[Idx]}");
             }
             
             commands.Add("e" + Environment.NewLine);
@@ -75,6 +73,33 @@ namespace SharpPlot.Canvas
             _plotFromStdin();
         }
         #endregion
-        
+    }
+    
+    
+    public class Scatter : Figure
+    {
+
+        #region Constructors
+        public Scatter(IEnumerable<double> x, IEnumerable<double> y, string title)
+        {
+            Options = "u 1:2 with points pt 7 ps 0.25";
+            ArrX = x.ToList();
+            ArrY = y.ToList();
+            Title = title;
+        }
+        #endregion
+    }
+    
+    public class Line2D : Figure{
+
+        #region Constructor
+        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title)
+        {
+            Options = "u 1:2 with lines";
+            ArrX = x.ToList();
+            ArrY = y.ToList();
+            Title = title;
+        }
+        #endregion
     }
 }

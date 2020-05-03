@@ -20,9 +20,9 @@ class Program
         
         // Gnuplot Example 1:
         Gnuplot.PlotScatter(x, x, "Test 0");
-        //Gnuplot.PlotScatter(x, sinX, "Test 1");
-        //Gnuplot.PlotScatter(x, sincosX, "Test 2");
-        //Gnuplot.PlotScatter(x, sincostanX, "Test 3");
+        Gnuplot.PlotLine2D(x, sinX, "Test 1");
+        Gnuplot.PlotScatter(x, sincosX, "Test 2");
+        Gnuplot.PlotLine2D(x, sincostanX, "Test 3");
         Gnuplot.Axis.SetXRange(-8, 8);
         Gnuplot.Axis.SetXTicks(new List<double>(){-8,-2, -1, 0, 1, 2, 8});
         Gnuplot.Axis.SetYTicks(start:-2, step:0.25, stop:2);

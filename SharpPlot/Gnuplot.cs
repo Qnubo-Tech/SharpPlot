@@ -56,23 +56,11 @@ namespace SharpPlot
         private static string GnuplotStr = "gnuplot";
         private static StreamWriter GnuplotCmd;
         private static Process GnuplotProcess;
-        private static string _plotInit = Environment.NewLine + "plot '-' ";
+        private static string _plotInit = Environment.NewLine + "plot";
 
         public static Axis Axis;
-        private static Scatter _scatter;
 
-        private static List<double> VecX { get; set; }
-        private static List<double> VecY { get; set; }
-        private static List<double> _vecZ { get; set; }
-        
-        private static List<List<double>> ArrX { get; set; } 
-        private static List<List<double>> ArrY  { get; set; }
-        private static List<List<double>> ArrZ  { get; set; }
-
-        private static List<string> Legends { get; set; }
-        private static List<int> Colours { get; set; }
-
-        private static string _mOptions;
+        private static List<Figure> _figures = new List<Figure>();
 
         public static void Start(string drive = "F", string rootFolder = @"Program Files\gnuplot\bin")
         {
@@ -91,17 +79,6 @@ namespace SharpPlot
             GnuplotCmd = GnuplotProcess.StandardInput;
             GnuplotCmd.WriteLine($"unset colorbox{Environment.NewLine}");
 
-            _mOptions = "u 1:2:3 w lp pt 7 lc var ";
-            
-            VecX = new List<double>();
-            VecY = new List<double>();
-            
-            ArrX = new List<List<double>>();
-            ArrY = new List<List<double>>();
-            
-            Legends = new List<string>();
-            Colours = new List<int>();
-            
             Axis = new Axis();
         }
         private static void _gnuplotProcessInit(string gnuplotFile)
@@ -137,48 +114,23 @@ namespace SharpPlot
                 Console.WriteLine("Something happened! => Review you command");
             }
         }
-
-        public static void AddPointXY(double x, double y)
-        {
-            
-            if (ArrX.Count != 0)
-            {
-                ArrX.First().Add(x);
-                ArrY.First().Add(y);
-            }
-            else
-            {
-                ArrX.Add(new List<double>());
-                ArrX.First().Add(x);
-                
-                ArrY.Add(new List<double>());
-                ArrY.First().Add(y);
-            }
-        }
         
-        public static void AddDatasetXY(double[] x, double[] y, string title)
-        {
-            ArrX.Add(x.ToList());
-            ArrY.Add(y.ToList());
-            
-            Legends.Add($"title '{title}'");
-        }
-
+        
+        
+        //TODO: Check x and y size before figure initialising
         public static void PlotScatter(IEnumerable<double> x, IEnumerable<double> y, string title)
         {
-            _scatter = new Scatter(x: x, y: y, title: title);
+            _figures.Add(new Scatter(x: x, y: y, title: title));
         }
 
-        public static void AddLegend(string title)
+        public static void PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title)
         {
-            Legends.Add($"title '{title}'");
+            _figures.Add(new Line2D(x: x, y: y, title:  title));
         }
 
         public static void CleanData()
         {
-            ArrX.Clear();
-            ArrY.Clear();
-            Legends.Clear();
+           _figures.Clear();
         }
 
 
@@ -188,76 +140,28 @@ namespace SharpPlot
         }
         
         
-        private static void _plotBegin()
-        {
-            
-            if (0 == Legends.Count)
-            {
-                WriteCommand(_plotInit + _mOptions + "No title" + Environment.NewLine);
-                return;
-            }
-            
-            if (1 == Legends.Count)
-            {
-                WriteCommand(_plotInit + _mOptions + Legends.First() + Environment.NewLine);
-                return;
-            }
-            
-            var cmd = _plotInit + _mOptions + Legends.First() + ",";
-            for (var k = 1; k < (Legends.Count - 1); k++)
-            {
-                cmd += $" '-' {_mOptions} {Legends[k]},";
-            }
-            
-            cmd += " '-' " + _mOptions + Legends.Last() + Environment.NewLine;
-            WriteCommand(cmd);
-            return;
-        }
-
-        private static void _plotEnd()
-        {
-            var cmd = "e" + Environment.NewLine;
-            WriteCommand(cmd);
-        }
-
-        private static void _plot_xy(double x, double y, int colour)
-        {
-            WriteCommand($"{x} {y} {colour}");
-        }
-
         private static void _plotUpdate()
         {
             GnuplotCmd.Flush();
         }
-
-
-        public static void PlotDatasetXY()
-        {
-            _plotBegin();
-            
-            if (ArrX.Count != ArrY.Count)
-            {
-                throw new Exception("Error in PlotXY: diferent sizes X-Y");
-            }
-
-            for (var i = 0; i < ArrX.Count; i++)
-            {
-                for (var j = 0; j < ArrX[i].Count; j++)
-                {
-                    _plot_xy(ArrX[i][j], ArrY[i][j], i);
-                }
-                _plotEnd();
-            }
-            _plotUpdate();
-        }
-
-        //TODO: Refactor Plot() to allow multiple Shapes in the same graph
+        
         public static void Show()
-        { 
-            WriteCommand(_scatter.HeaderPlot);
-            foreach (var dataPoint in _scatter.DataPoints)
+        {
+            var plotInit = _plotInit;
+            foreach (var figure in _figures)
             {
-                WriteCommand(dataPoint);
+                plotInit += figure.HeaderPlot + " ,";
+            }
+
+            plotInit += Environment.NewLine;
+            WriteCommand(plotInit);
+
+            foreach (var figure in _figures)
+            {
+                foreach (var dataPoint in figure.DataPoints)
+                {
+                    WriteCommand(dataPoint);
+                }
             }
         }
 
