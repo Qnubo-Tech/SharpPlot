@@ -4,15 +4,25 @@
 
 # SharpPlot
 
+## Welcome
+
 SharpPlot is currently at the very beginning of the development cycle and aims to bring a proper wrapper of 
 GNUPlot into **C#**. The fundamental idea behind this project is to bring to .NET core the easiness provided by other 
 libraries in the Python's community, e.g. [MatPlotLib](https://matplotlib.org/).
+
+### Getting started
+
+(TBC)
 
 ## Requirements
 
 * [Gnuplot](http://www.gnuplot.info/)
 
-## Example
+## Main features
+
+(TBC)
+
+### Examples
 
 ```csharp
 static void Main(string[] args)
@@ -58,10 +68,25 @@ static void Main(string[] args)
 ```
 Result:
 <p align="center">
-  <img src="https://github.com/Qnubo-Tech/SharpPlot/blob/develop/SharpPlot/examples/capture1.PNG?raw=true" alt='gnuplot1'>
+  <img src="Examples/Figures/capture1.PNG" alt='gnuplot1'>
 </p>
 
 <p align="center">
-  <img src="https://github.com/Qnubo-Tech/SharpPlot/blob/develop/SharpPlot/examples/capture2.PNG?raw=true" alt='gnuplot2'>
+  <img src="Examples/Figures/capture2.PNG" alt='gnuplot2'>
 </p>
 
+## Platforms
+
+(TBC)
+
+## Authors
+
+(TBC)
+
+## Contributing
+
+(TBC)
+
+## License
+
+(TBC)
