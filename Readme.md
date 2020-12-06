@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Qnubo-Tech/"><img src="Docs/logo-pre.png" alt='SharpPlot'></a>
+  <a href="https://github.com/Qnubo-Tech/"><img src="Docs/logo-pre.png" alt='SharpPlot' height="100" width="300"></a>
 </p>
 
 # SharpPlot
