@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using SharpPlot.Canvas;
 
 namespace SharpPlot
@@ -53,37 +54,58 @@ namespace SharpPlot
     
     public static class Gnuplot
     {
-        private static string GnuplotStr = "gnuplot";
-        private static StreamWriter GnuplotCmd;
-        private static Process GnuplotProcess;
+        private static string _gnuplotStr = "gnuplot";
+        private static StreamWriter _gnuplotCmd;
+        private static Process _gnuplotProcess;
         private static string _plotInit = Environment.NewLine + "plot";
 
+        public static string WinDrive = "F";
+        public static string WinBinFolder = @"Program Files\gnuplot\bin";
+        public static string LinuxBinFolder = "/usr/local/bin";
+        public static string OSXBinFolder = "/usr/local/bin";
         public static Axis Axis;
 
         private static List<Figure> _figures = new List<Figure>();
-
-        public static void Start(string drive = "F", string rootFolder = @"Program Files\gnuplot\bin")
+        
+        public static void Start()
         {
-            string file = $@"{drive}:\{rootFolder}\{GnuplotStr}.exe";
-            _gnuplotInit(file: file);
+            string file = $"{OSXBinFolder}/{_gnuplotStr}";
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                file = $"{LinuxBinFolder}/{_gnuplotStr}";
+            }
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                file = $"{OSXBinFolder}/{_gnuplotStr}";
+            }
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                file = $@"{WinDrive}:\{WinBinFolder}\{_gnuplotStr}.exe";
+            }
+            
+            _gnuplotInit(file);
         }
-        public static void Start(string filePath)
+        
+        public static void Start(string gnuplotFullPath)
         {
-            _gnuplotInit(file: filePath);
+            _gnuplotInit(file: gnuplotFullPath);
         }
         
         private static void _gnuplotInit(string file)
         {
             _gnuplotProcessInit(file);
             
-            GnuplotCmd = GnuplotProcess.StandardInput;
-            GnuplotCmd.WriteLine($"unset colorbox{Environment.NewLine}");
+            _gnuplotCmd = _gnuplotProcess.StandardInput;
+            _gnuplotCmd.WriteLine($"unset colorbox{Environment.NewLine}");
 
             Axis = new Axis();
         }
         private static void _gnuplotProcessInit(string gnuplotFile)
         {   
-            GnuplotProcess = new Process
+            _gnuplotProcess = new Process
             {
                 StartInfo =
                 {
@@ -94,20 +116,20 @@ namespace SharpPlot
                 }
             };
             
-            GnuplotProcess.Start();
+            _gnuplotProcess.Start();
         }
         
         public static void Exit()
         {
-            GnuplotCmd.Close();
-            GnuplotProcess.WaitForExit();
+            _gnuplotCmd.Close();
+            _gnuplotProcess.WaitForExit();
         }
 
         public static void WriteCommand(string command)
         {
             try
             {
-                GnuplotCmd.WriteLine(command);
+                _gnuplotCmd.WriteLine(command);
             }
             catch
             {
@@ -142,7 +164,7 @@ namespace SharpPlot
         
         private static void _plotUpdate()
         {
-            GnuplotCmd.Flush();
+            _gnuplotCmd.Flush();
         }
         
         public static void Show()
