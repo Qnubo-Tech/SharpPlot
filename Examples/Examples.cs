@@ -6,6 +6,7 @@ using System.Numerics;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using SharpPlot;
+using SharpPlot.Canvas;
 
 class Program
 {
@@ -13,11 +14,15 @@ class Program
     {
         Gnuplot.Start();
         var x = Enumerable.Range(-100, 201).Select(z=>z*0.025*Math.PI).ToArray();
-
+        
+        var tanX = x.Select(Math.Tan).ToArray();
         var sinX = x.Select(Math.Sin).ToArray();
         var sincosX = sinX.Select(Math.Cos).ToArray();
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
         
+        var dataSet = new DataSet(x, tanX);
+        Gnuplot.PlotLine2D(dataSet, "WithDataSets");
+
         // Gnuplot Example 1:
         Gnuplot.PlotScatter(x, x, "Test 0");
         Gnuplot.PlotLine2D(x, sinX, "Test 1");

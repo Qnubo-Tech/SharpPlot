@@ -16,7 +16,7 @@ namespace SharpPlot.UnitTest.Canvas
         public void SetUp()
         {
             _axisRangeDefault = new AxisRange();
-            _axisRangeCompleteCttr = new AxisRange(-5, 5, Direction.Z);
+            _axisRangeCompleteCttr = new AxisRange(-5, 5, AxisName.Z);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace SharpPlot.UnitTest.Canvas
         {
             _axisTicksDefault = new AxisTicks();
             var ticksValues = Generate.LinearRange(-2, 0.5, 2);
-            _axisTicksCompleteCttr = new AxisTicks(ticksValues, Direction.Z);
+            _axisTicksCompleteCttr = new AxisTicks(ticksValues, AxisName.Z);
         }
         
         [Test]
@@ -162,7 +162,7 @@ namespace SharpPlot.UnitTest.Canvas
         public void SetUp()
         {
             _axisLabelDefault = new AxisLabel();
-            _axisLabelCompleteCttr = new AxisLabel(label: "Label", direction: Direction.Z);
+            _axisLabelCompleteCttr = new AxisLabel(label: "Label", axisName: AxisName.Z);
         }
 
         [Test]

@@ -5,7 +5,7 @@ using MathNet.Numerics;
 
 namespace SharpPlot.Canvas
 {
-    public enum Direction
+    public enum AxisName
     {
         X=0,
         Y,
@@ -52,16 +52,16 @@ namespace SharpPlot.Canvas
         public Axis()
         {
             _xRange = new AxisRange();
-            _yRange = new AxisRange(Direction.Y);
-            _zRange = new AxisRange(Direction.Z);
+            _yRange = new AxisRange(AxisName.Y);
+            _zRange = new AxisRange(AxisName.Z);
 
             _xTicks = new AxisTicks();
-            _yTicks = new AxisTicks(Direction.Y);
-            _zTicks = new AxisTicks(Direction.Z);
+            _yTicks = new AxisTicks(AxisName.Y);
+            _zTicks = new AxisTicks(AxisName.Z);
 
             _xlabel = new AxisLabel();
-            _ylabel = new AxisLabel(Direction.Y);
-            _zlabel = new AxisLabel(Direction.Z);
+            _ylabel = new AxisLabel(AxisName.Y);
+            _zlabel = new AxisLabel(AxisName.Z);
         }
         #endregion
 
@@ -179,17 +179,17 @@ namespace SharpPlot.Canvas
         #region AddTicks
         public void AddTicks(Dictionary<string, double> labelValues, int axis=0)
         {
-            Direction direction = (Direction) axis;
+            AxisName axisName = (AxisName) axis;
             AxisTicks axisTicks;
-            switch (direction)
+            switch (axisName)
             {
-                case Direction.X:
+                case AxisName.X:
                     axisTicks = _xTicks;
                     break;
-                case Direction.Y:
+                case AxisName.Y:
                     axisTicks = _yTicks;
                     break;
-                case Direction.Z:
+                case AxisName.Z:
                     axisTicks = _zTicks;
                     break;
                 default:
@@ -223,7 +223,7 @@ namespace SharpPlot.Canvas
     {
         #region Attributes
         private double[] _limits;
-        private Direction _direction;
+        private AxisName _axisName;
         #endregion
         
         #region Properties
@@ -235,25 +235,25 @@ namespace SharpPlot.Canvas
         public AxisRange()
         {
             _limits = new double[] {-1, 1};
-            _direction = Direction.X;
+            _axisName = AxisName.X;
         }
 
-        public AxisRange(Direction direction)
+        public AxisRange(AxisName axisName)
         {
             _limits = new double[] {-1, 1};
-            _direction = direction;
+            _axisName = axisName;
         }
 
-        public AxisRange(double min, double max, Direction direction)
+        public AxisRange(double min, double max, AxisName axisName)
         {
             _limits = new double[] {min, max};
-            _direction = direction;
+            _axisName = axisName;
         }
         #endregion
         
         private string _setRange(double min, double max)
         {
-            string axisName = _direction.ToString().ToLower();
+            string axisName = _axisName.ToString().ToLower();
             _limits[0] = min;
             _limits[1] = max;
             
@@ -277,7 +277,7 @@ namespace SharpPlot.Canvas
     {
         #region Attributes
         private IEnumerable<double> _values;
-        private Direction _direction;
+        private AxisName _axisName;
         #endregion
 
         #region Properties
@@ -289,25 +289,25 @@ namespace SharpPlot.Canvas
         public AxisTicks()
         {
            _values = Generate.LinearRange(-1, 0.5, 1);
-           _direction = Direction.X;
+           _axisName = AxisName.X;
         }
 
-        public AxisTicks(Direction direction)
+        public AxisTicks(AxisName axisName)
         {
             _values = Generate.LinearRange(-1, 0.5, 1);
-            _direction = direction;
+            _axisName = axisName;
         }
 
-        public AxisTicks(IEnumerable<double> ticksValues, Direction direction)
+        public AxisTicks(IEnumerable<double> ticksValues, AxisName axisName)
         {
             _values = ticksValues;
-            _direction = direction;
+            _axisName = axisName;
         }
         #endregion
 
         private string _setTicks(IEnumerable<double> ticksValues)
         {
-            string axisName = _direction.ToString().ToLower();
+            string axisName = _axisName.ToString().ToLower();
             _values = ticksValues.OrderBy(e => e);
 
             var command = $"set {axisName}tics ({string.Join(",", _values)})";
@@ -317,7 +317,7 @@ namespace SharpPlot.Canvas
 
         private List<string> _addTicks(Dictionary<string, double> labelValues)
         {
-            string axisName = _direction.ToString().ToLower();
+            string axisName = _axisName.ToString().ToLower();
 
             var commands = new List<string>();
             var enumerable = _values.ToList();
@@ -352,7 +352,7 @@ namespace SharpPlot.Canvas
     {
         #region Attributes
         private string _label;
-        private Direction _direction;
+        private AxisName _axisName;
         private int _rotation;
         #endregion
         
@@ -375,28 +375,28 @@ namespace SharpPlot.Canvas
         public AxisLabel()
         {
             _label = "";
-            _direction = Direction.X;
+            _axisName = AxisName.X;
             _rotation = 0;
         }
 
-        public AxisLabel(Direction direction)
+        public AxisLabel(AxisName axisName)
         {
             _label = "";
-            _direction = direction;
+            _axisName = axisName;
             _rotation = 0;
         }
 
-        public AxisLabel(string label, Direction direction)
+        public AxisLabel(string label, AxisName axisName)
         {
             _label = label;
-            _direction = direction;
+            _axisName = axisName;
             _rotation = 0;
         }
         #endregion
 
         private string _setLabel(string label, int rotation)
         {
-            string axisName = _direction.ToString().ToLower();
+            string axisName = _axisName.ToString().ToLower();
             _label = label;
             _rotation = rotation;
 

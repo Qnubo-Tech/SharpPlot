@@ -19,35 +19,34 @@ namespace SharpPlot
     public class DataSet
     {
         public int NumberOfDimensions { get; private set; }
-        public List<List<double>> Data { get; set; }
+        public Dictionary<AxisName, IEnumerable<double>> Data { get; set; }
         
-        public DataSet(ChartType chartType = ChartType.TwoDimensional)
+        public DataSet(IEnumerable<double> x, IEnumerable<double> y)
         {
-            NumberOfDimensions = Convert.ToInt32(chartType);
-            _initialiseData();
+            NumberOfDimensions = Convert.ToInt32(ChartType.TwoDimensional);
+            _initialiseData(new List<IEnumerable<double>>(){x, y});
+        }
+        
+        public DataSet(
+            IEnumerable<double> x,
+            IEnumerable<double> y,
+            IEnumerable<double> z
+            )
+        {
+            NumberOfDimensions = Convert.ToInt32(ChartType.ThreeDimensional);
+            _initialiseData(new List<IEnumerable<double>>(){x, y, z});
         }
 
-        private void _initialiseData()
+        private void _initialiseData(IEnumerable<IEnumerable<double>> data)
         {
-            switch (NumberOfDimensions)
+            Data = new Dictionary<AxisName, IEnumerable<double>>(NumberOfDimensions);
+            for (int k = 0; k < NumberOfDimensions; k++)
             {
-                case 2:
-                    Data = new List<List<double>>()
-                    {
-                        new List<double>(),
-                        new List<double>(),
-                    };
-                    break;
-                case 3:
-                    Data = new List<List<double>>()
-                    {
-                        new List<double>(),
-                        new List<double>(),
-                        new List<double>()
-                    };
-                    break;
+                Data.Add((AxisName) k, data.ElementAtOrDefault(k));
             }
         }
+
+        public IEnumerable<double> this[AxisName d] => Data[d];
     }
     
     
@@ -147,6 +146,11 @@ namespace SharpPlot
         public static void PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title)
         {
             _figures.Add(new Line2D(x: x, y: y, title:  title));
+        }
+        
+        public static void PlotLine2D(DataSet ds, string title)
+        {
+            _figures.Add(new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title:  title));
         }
 
         public static void CleanData()
