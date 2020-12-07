@@ -29,24 +29,23 @@ namespace SharpPlot
 
         private void _initialiseData()
         {
-
-            if (2 == NumberOfDimensions)
+            switch (NumberOfDimensions)
             {
-                Data = new List<List<double>>()
-                {
-                    new List<double>(),
-                    new List<double>(),
-                };
-            }
-
-            if (3 == NumberOfDimensions)
-            {
-                Data = new List<List<double>>()
-                {
-                    new List<double>(),
-                    new List<double>(),
-                    new List<double>()
-                };
+                case 2:
+                    Data = new List<List<double>>()
+                    {
+                        new List<double>(),
+                        new List<double>(),
+                    };
+                    break;
+                case 3:
+                    Data = new List<List<double>>()
+                    {
+                        new List<double>(),
+                        new List<double>(),
+                        new List<double>()
+                    };
+                    break;
             }
         }
     }
@@ -169,21 +168,14 @@ namespace SharpPlot
         
         public static void Show()
         {
-            var plotInit = _plotInit;
-            foreach (var figure in _figures)
-            {
-                plotInit += figure.HeaderPlot + " ,";
-            }
+            var plotInit = _figures.Aggregate(_plotInit, (current, figure) => current + (figure.HeaderPlot + " ,"));
 
             plotInit += Environment.NewLine;
             WriteCommand(plotInit);
 
-            foreach (var figure in _figures)
+            foreach (var dataPoint in _figures.SelectMany(figure => figure.DataPoints))
             {
-                foreach (var dataPoint in figure.DataPoints)
-                {
-                    WriteCommand(dataPoint);
-                }
+                WriteCommand(dataPoint);
             }
         }
 
