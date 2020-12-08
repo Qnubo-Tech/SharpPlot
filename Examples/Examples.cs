@@ -21,14 +21,15 @@ class Program
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
         
         var dataSet = new DataSet(x, tanX);
-        Gnuplot.PlotLine2D(dataSet, "WithDataSets");
+        var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets");
 
         // Gnuplot Example 1:
-        Gnuplot.PlotScatter(x, x, "Test 0");
-        Gnuplot.PlotLine2D(x, sinX, "Test 1");
-        Gnuplot.PlotScatter(x, sincosX, "Test 2");
-        Gnuplot.PlotLine2D(x, sincostanX, "Test 3");
+        var test0 = Gnuplot.PlotScatter(x, x, "Test 0");
+        var test1 = Gnuplot.PlotLine2D(x, sinX, "Test 1");
+        var test2 = Gnuplot.PlotScatter(x, sincosX, "Test 2");
+        var test3 =Gnuplot.PlotLine2D(x, sincostanX, "Test 3");
         
+
         Gnuplot.Axis.SetXTicks(new List<double>(){-4,-2, -1, 0, 1, 2, 4});
         Gnuplot.Axis.SetYTicks(new List<double>(){-4, -3, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 3, 4});
         var xticks = new Dictionary<string, double>() { {"pi", Math.PI}, {"phi", 1.618}, {"e", Math.E}};
@@ -45,10 +46,10 @@ class Program
         Gnuplot.Axis.SetYRange(-1, 1);
         Gnuplot.Axis.SetXLabel("x");
         Gnuplot.Axis.SetYLabel("sin(x)");
-        Gnuplot.PlotLine2D(x, sinX, "sin(x)");
+        var sinXId = Gnuplot.PlotLine2D(x, sinX, "sin(x)");
         Gnuplot.Show(); 
         Gnuplot.Wait();
-        
+
         Gnuplot.Exit();
         
         // Evaluate a special function

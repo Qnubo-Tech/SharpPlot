@@ -52,6 +52,7 @@ namespace SharpPlot
     
     public static class Gnuplot
     {
+        #region Attributes
         private static string _gnuplotStr = "gnuplot";
         private static StreamWriter _gnuplotCmd;
         private static Process _gnuplotProcess;
@@ -63,8 +64,11 @@ namespace SharpPlot
         public static string OSXBinFolder = "/usr/local/bin";
         public static Axis Axis;
 
-        private static List<Figure> _figures = new List<Figure>();
+        private static int _figureCounter = 0;
+        private static Dictionary<int, Figure> _figuresDict = new Dictionary<int, Figure>();
         
+        #endregion
+
         public static void Start()
         {
             string file = $"{OSXBinFolder}/{_gnuplotStr}";
@@ -135,27 +139,40 @@ namespace SharpPlot
             }
         }
         
+        public static Figure GetFigure(int id)
+        {
+            return _figuresDict[id];
+        }
         
         
         //TODO: Check x and y size before figure initialising
-        public static void PlotScatter(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public static int PlotScatter(IEnumerable<double> x, IEnumerable<double> y, string title)
         {
-            _figures.Add(new Scatter(x: x, y: y, title: title));
+            _figureCounter++;
+            var figId = _figureCounter;
+            _figuresDict.Add(figId, new Scatter(x: x, y: y, title: title));
+            return figId;
         }
 
-        public static void PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public static int PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title)
         {
-            _figures.Add(new Line2D(x: x, y: y, title:  title));
+            _figureCounter++;
+            var figId = _figureCounter;
+            _figuresDict.Add(figId, new Line2D(x: x, y: y, title:  title));
+            return figId;
         }
         
-        public static void PlotLine2D(DataSet ds, string title)
+        public static int PlotLine2D(DataSet ds, string title)
         {
-            _figures.Add(new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title:  title));
+            _figureCounter++;
+            var figId = _figureCounter;
+            _figuresDict.Add(figId, new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title:  title));
+            return figId;
         }
 
         public static void CleanData()
         {
-           _figures.Clear();
+           _figuresDict.Clear();
         }
 
 
@@ -172,12 +189,12 @@ namespace SharpPlot
         
         public static void Show()
         {
-            var plotInit = _figures.Aggregate(_plotInit, (current, figure) => current + (figure.HeaderPlot + " ,"));
+            var plotInit = _figuresDict.Aggregate(_plotInit, (current, idFigure) => current + (idFigure.Value.HeaderPlot + " ,"));
 
             plotInit += Environment.NewLine;
             WriteCommand(plotInit);
 
-            foreach (var dataPoint in _figures.SelectMany(figure => figure.DataPoints))
+            foreach (var dataPoint in _figuresDict.SelectMany(idFigure => idFigure.Value.DataPoints))
             {
                 WriteCommand(dataPoint);
             }
