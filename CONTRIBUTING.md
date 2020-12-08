@@ -1,4 +1,4 @@
-# How to contribute to IDDS
+# How to contribute to SharpPlot
 
 After some warm up, maybe you feel confident enough to improve this or that bit of code, or extend a given module. We also hope this translates in an improvement of the library to be shared with the community, and **we'll thank you for this!**
 
