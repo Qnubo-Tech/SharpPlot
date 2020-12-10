@@ -10,7 +10,26 @@ namespace SharpPlot.Utils
         Orange,
         Purple,
         Brown,
+        Pink,
         White,
-        Grey
+        Grey,
+        RoyalBlue,
+        GoldenRod,
+        SteelBlue,
+        Orchid,
+        Aquamarine,
+        Turquoise,
+        Gold,
+        Navy,
+        SkyBlue,
+        Cyan,
+        Magenta,
+        Coral,
+        Salmon,
+        Khaki,
+        Beige,
+        Olive,
+        Plum,
+        SeaGreen
     }
 }

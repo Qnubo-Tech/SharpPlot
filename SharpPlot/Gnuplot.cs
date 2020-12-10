@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using SharpPlot.Canvas;
+using SharpPlot.Utils;
 
 namespace SharpPlot
 {
@@ -154,19 +155,19 @@ namespace SharpPlot
             return figId;
         }
 
-        public static int PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public static int PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title, Color color)
         {
             _figureCounter++;
             var figId = _figureCounter;
-            _figuresDict.Add(figId, new Line2D(x: x, y: y, title:  title));
+            _figuresDict.Add(figId, new Line2D(x: x, y: y, title:  title, color: color));
             return figId;
         }
         
-        public static int PlotLine2D(DataSet ds, string title)
+        public static int PlotLine2D(DataSet ds, string title, Color color)
         {
             _figureCounter++;
             var figId = _figureCounter;
-            _figuresDict.Add(figId, new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title:  title));
+            _figuresDict.Add(figId, new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title:  title, color: color));
             return figId;
         }
 

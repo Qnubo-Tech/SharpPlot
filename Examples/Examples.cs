@@ -7,6 +7,7 @@ using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using SharpPlot;
 using SharpPlot.Canvas;
+using SharpPlot.Utils;
 
 class Program
 {
@@ -21,13 +22,13 @@ class Program
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
         
         var dataSet = new DataSet(x, tanX);
-        var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets");
+        var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets", Color.Navy);
 
         // Gnuplot Example 1:
         var test0 = Gnuplot.PlotScatter(x, x, "Test 0");
-        var test1 = Gnuplot.PlotLine2D(x, sinX, "Test 1");
+        var test1 = Gnuplot.PlotLine2D(x, sinX, "Test 1", Color.Red);
         var test2 = Gnuplot.PlotScatter(x, sincosX, "Test 2");
-        var test3 =Gnuplot.PlotLine2D(x, sincostanX, "Test 3");
+        var test3 =Gnuplot.PlotLine2D(x, sincostanX, "Test 3", Color.Green);
         
 
         Gnuplot.Axis.SetXTicks(new List<double>(){-4,-2, -1, 0, 1, 2, 4});
@@ -46,7 +47,7 @@ class Program
         Gnuplot.Axis.SetYRange(-1, 1);
         Gnuplot.Axis.SetXLabel("x");
         Gnuplot.Axis.SetYLabel("sin(x)");
-        var sinXId = Gnuplot.PlotLine2D(x, sinX, "sin(x)");
+        var sinXId = Gnuplot.PlotLine2D(x, sinX, "sin(x)", Color.Black);
         Gnuplot.Show(); 
         Gnuplot.Wait();
 

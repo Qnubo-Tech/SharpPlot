@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpPlot.Utils;
 
 namespace SharpPlot.Canvas
 {
@@ -93,9 +94,9 @@ namespace SharpPlot.Canvas
     public class Line2D : Figure{
 
         #region Constructor
-        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title, Color color=Color.Black)
         {
-            Options = "u 1:2 with lines";
+            Options = $"u 1:2 with lines lc rgb '{color.ToString().ToLower()}'";
             ArrX = x.ToList();
             ArrY = y.ToList();
             Title = title;
