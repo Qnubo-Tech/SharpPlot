@@ -147,15 +147,15 @@ namespace SharpPlot
         
         
         //TODO: Check x and y size before figure initialising
-        public static int PlotScatter(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public static int PlotScatter(IEnumerable<double> x, IEnumerable<double> y, string title, double size, Marker marker=Marker.ColoredCircle)
         {
             _figureCounter++;
             var figId = _figureCounter;
-            _figuresDict.Add(figId, new Scatter(x: x, y: y, title: title));
+            _figuresDict.Add(figId, new Scatter(x: x, y: y, title: title, size: size, marker: marker));
             return figId;
         }
 
-        public static int PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title, Color color)
+        public static int PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title, Color color=Color.Black)
         {
             _figureCounter++;
             var figId = _figureCounter;

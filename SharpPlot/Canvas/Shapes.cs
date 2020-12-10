@@ -81,9 +81,9 @@ namespace SharpPlot.Canvas
     {
 
         #region Constructors
-        public Scatter(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public Scatter(IEnumerable<double> x, IEnumerable<double> y, string title, double size, Marker marker)
         {
-            Options = "u 1:2 with points pt 7 ps 0.33";
+            Options = $"u 1:2 with points ps {size} pt {(int) marker}";
             ArrX = x.ToList();
             ArrY = y.ToList();
             Title = title;
@@ -94,7 +94,7 @@ namespace SharpPlot.Canvas
     public class Line2D : Figure{
 
         #region Constructor
-        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title, Color color=Color.Black)
+        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title, Color color)
         {
             Options = $"u 1:2 with lines lc rgb '{color.ToString().ToLower()}'";
             ArrX = x.ToList();

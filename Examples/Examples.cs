@@ -25,9 +25,9 @@ class Program
         var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets", Color.Navy);
 
         // Gnuplot Example 1:
-        var test0 = Gnuplot.PlotScatter(x, x, "Test 0");
+        var test0 = Gnuplot.PlotScatter(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle);
         var test1 = Gnuplot.PlotLine2D(x, sinX, "Test 1", Color.Red);
-        var test2 = Gnuplot.PlotScatter(x, sincosX, "Test 2");
+        var test2 = Gnuplot.PlotScatter(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle);
         var test3 =Gnuplot.PlotLine2D(x, sincostanX, "Test 3", Color.Green);
         
 
