@@ -81,9 +81,10 @@ namespace SharpPlot.Canvas
     {
 
         #region Constructors
-        public Scatter(IEnumerable<double> x, IEnumerable<double> y, string title, double size, Marker marker)
+        public Scatter(IEnumerable<double> x, IEnumerable<double> y, 
+            string title, double size, Marker marker, Color color)
         {
-            Options = $"u 1:2 with points ps {size} pt {(int) marker}";
+            Options = $"u 1:2 with points ps {size} pt {(int) marker} lc rgb '{color.ToString().ToLower()}'";
             ArrX = x.ToList();
             ArrY = y.ToList();
             Title = title;
