@@ -22,13 +22,13 @@ class Program
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
         
         var dataSet = new DataSet(x, tanX);
-        var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets", Color.Navy);
+        var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets", width: 2, dashType: DashType.DashDotted, Color.Navy);
 
         // Gnuplot Example 1:
         var test0 = Gnuplot.PlotScatter(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);
-        var test1 = Gnuplot.PlotLine2D(x, sinX, "Test 1", Color.Red);
+        var test1 = Gnuplot.PlotLine2D(x, sinX, "Test 1", width: 2, dashType: DashType.DashDoubleDotted, Color.Red);
         var test2 = Gnuplot.PlotScatter(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle, color: Color.Grey);
-        var test3 =Gnuplot.PlotLine2D(x, sincostanX, "Test 3", Color.Green);
+        var test3 = Gnuplot.PlotLine2D(x, sincostanX, "Test 3", width:0.5, dashType: DashType.Solid, Color.Green);
         
 
         Gnuplot.Axis.SetXTicks(new List<double>(){-4,-2, -1, 0, 1, 2, 4});
@@ -47,20 +47,11 @@ class Program
         Gnuplot.Axis.SetYRange(-1, 1);
         Gnuplot.Axis.SetXLabel("x");
         Gnuplot.Axis.SetYLabel("sin(x)");
-        var sinXId = Gnuplot.PlotLine2D(x, sinX, "sin(x)", Color.Black);
+        var sinXId = Gnuplot.PlotLine2D(x, sinX, "sin(x)", width: 2, dashType: DashType.MediumDash, Color.Black);
         Gnuplot.Show(); 
         Gnuplot.Wait();
 
         Gnuplot.Exit();
-        
-        // Evaluate a special function
-        Console.WriteLine(SpecialFunctions.Erf(0.5));
 
-        // Solve a random linear equation system with 500 unknowns
-        var m = Matrix<double>.Build.Random(500, 500);
-        var v = MathNet.Numerics.LinearAlgebra.Vector<double>.Build.Random(500);
-        var y = m.Solve(v);
-        Console.WriteLine(y);
-        
     }
 }

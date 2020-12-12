@@ -92,12 +92,13 @@ namespace SharpPlot.Canvas
         #endregion
     }
     
-    public class Line2D : Figure{
+    public class Line2D : Figure
+    {
 
         #region Constructor
-        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title, Color color)
+        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title, double width, DashType dashType, Color color)
         {
-            Options = $"u 1:2 with lines lc rgb '{color.ToString().ToLower()}'";
+            Options = $"u 1:2 with lines lw {width} dt {(int) dashType} lc rgb '{color.ToString().ToLower()}'";
             ArrX = x.ToList();
             ArrY = y.ToList();
             Title = title;
