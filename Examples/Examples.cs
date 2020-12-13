@@ -23,6 +23,9 @@ class Program
         
         var dataSet = new DataSet(x, tanX);
         var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets", width: 2, dashType: DashType.DashDotted, Color.Navy);
+        var fig = Gnuplot.GetFigure(whitDataSetsId);
+        fig.SetTitle(title: "foooo");
+        fig.SetColor(color: Color.Red);
 
         // Gnuplot Example 1:
         var test0 = Gnuplot.PlotScatter(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);

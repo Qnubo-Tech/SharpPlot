@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using SharpPlot.Canvas;
+using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
 
 namespace SharpPlot
