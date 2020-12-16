@@ -154,44 +154,61 @@ namespace SharpPlot
         
         
         //TODO: Check x and y size before figure initialising
-        public static (int, Figure) PlotScatter(IEnumerable<double> x, IEnumerable<double> y)
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y) 
+            where TFigure : Figure, new()
         {
-            Figure fig = new Scatter(x, y);
-            var figId = _getNextId();
-            _figuresDict.Add(figId, fig);
-            return (figId, fig);
-        }
-        public static (int, Figure) PlotScatter(IEnumerable<double> x, IEnumerable<double> y,
-            string title, double size=1, Marker marker=Marker.ColoredCircle, Color color=Color.Black)
-        {
-            Figure fig = new Scatter(x: x, y: y, title: title, size: size, marker: marker, color: color);
-            var figId = _getNextId();
-            _figuresDict.Add(figId, fig);
-            return (figId, fig);
-        }
-
-        public static (int, Figure) PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, 
-            string title, double width=1.0, DashType dashType=DashType.Solid,  Color color=Color.Black)
-        {
-            Figure fig = new Line2D(x: x, y: y, title: title, width: width, dashType: dashType, color: color);
-            var figId = _getNextId();
-            _figuresDict.Add(figId, fig);
-            return (figId, fig);
-        }
-
-        public static (int, Figure) PlotLine2D(IEnumerable<double> x, IEnumerable<double> y)
-        {
-            Figure fig = new Line2D(x: x, y: y);
+            var fig = new TFigure {ArrX = x, ArrY = y};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
             return (figId, fig);
         }
         
-        public static (int, Figure) PlotLine2D(DataSet ds, 
-            string title, double width=1.0, DashType dashType=DashType.Solid, Color color=Color.Black)
+        public static (int, TFigure) Plot<TFigure>(DataSet ds) 
+            where TFigure : Figure, new()
         {
-            Figure fig = new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title: title, width: width,
-                dashType: dashType, color: color);
+            var fig = new TFigure {ArrX = ds[AxisName.X], ArrY = ds[AxisName.Y]};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y,
+            string title, double size = 1, double width=1.0, DashType dashType=DashType.Solid,
+            Marker marker = Marker.ColoredCircle, Color color = Color.Black)
+            where TFigure : Figure, new()
+        {
+            var fig = new TFigure {
+                ArrX = x, 
+                ArrY = y, 
+                Properties =
+                {
+                    Color = color, Marker = marker, 
+                    DashType = dashType, Size = size, 
+                    Title = title, Width = width
+                }
+            };
+
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+
+        public static (int, TFigure) Plot<TFigure>(DataSet ds,
+            string title, double size = 1, double width = 1.0, DashType dashType = DashType.Solid,
+            Marker marker = Marker.ColoredCircle, Color color = Color.Black)
+            where TFigure : Figure, new()
+        {
+            var fig = new TFigure {
+                ArrX = ds[AxisName.X], 
+                ArrY = ds[AxisName.Y], 
+                Properties =
+                {
+                    Color = color, Marker = marker, 
+                    DashType = dashType, Size = size, 
+                    Title = title, Width = width
+                }
+            };
+
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
             return (figId, fig);

@@ -7,6 +7,7 @@ using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using SharpPlot;
 using SharpPlot.Canvas;
+using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
 
 class Program
@@ -22,14 +23,14 @@ class Program
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
         
         var dataSet = new DataSet(x, tanX);
-        var (lineDataSetId, lineDataset) = Gnuplot.PlotLine2D(dataSet, "WithDataSets", width: 2, dashType: DashType.DashDotted, Color.Navy);
+        var (lineDataSetId, lineDataset) = Gnuplot.Plot<Line2D>(ds: dataSet, title: "WithDataSets", 
+            width: 2, dashType: DashType.DashDotted, color: Color.Navy);
 
         // Gnuplot Example 1:
-        var (test0Id, test0) = Gnuplot.PlotScatter(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);
-        var (test1Id, test1) = Gnuplot.PlotLine2D(x, sinX, "Test 1", width: 2, dashType: DashType.DashDoubleDotted, Color.Red);
-        var (test2Id, test2) = Gnuplot.PlotScatter(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle, color: Color.Grey);
-        var (test3Id, test3) = Gnuplot.PlotLine2D(x, sincostanX, "Test 3", width:0.5, dashType: DashType.Solid, Color.Green);
-        
+        var (test0Id, test0) = Gnuplot.Plot<Scatter>(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);
+        var (test1Id, test1) = Gnuplot.Plot<Line2D>(x, sinX, "Test 1", width: 2, dashType: DashType.DashDoubleDotted, color:Color.Red);
+        var (test2Id, test2) = Gnuplot.Plot<Scatter>(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle, color: Color.Grey);
+        var (test3Id, test3) = Gnuplot.Plot<Line2D>(x, sincostanX, "Test 3", width:0.5, dashType: DashType.Solid, color: Color.Green);
 
         Gnuplot.Axis.SetXTicks(new List<double>(){-4,-2, -1, 0, 1, 2, 4});
         Gnuplot.Axis.SetYTicks(new List<double>(){-4, -3, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 3, 4});
@@ -47,7 +48,7 @@ class Program
         Gnuplot.Axis.SetYRange(-1, 1);
         Gnuplot.Axis.SetXLabel("x");
         Gnuplot.Axis.SetYLabel("sin(x)");
-        var (sinXId, sinXFig) = Gnuplot.PlotLine2D(x, sinX);
+        var (sinXId, sinXFig) = Gnuplot.Plot<Line2D>(x, sinX);
         Gnuplot.Show(); 
         Gnuplot.Wait();
 

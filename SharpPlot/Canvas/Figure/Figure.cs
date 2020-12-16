@@ -11,10 +11,10 @@ namespace SharpPlot.Canvas.Figure
 
         private const string PlotInit = " '-' ";
 
-        protected readonly FigureProperties Properties = new FigureProperties();
+        protected internal readonly FigureProperties Properties = new FigureProperties();
 
-        private readonly List<double> _arrX;
-        private readonly List<double> _arrY;
+        protected internal IEnumerable<double> ArrX;
+        protected internal IEnumerable<double> ArrY;
 
         #endregion
     
@@ -26,14 +26,10 @@ namespace SharpPlot.Canvas.Figure
     
         #region Constructors
 
-        public Figure(){}
+        //public Figure(){}
 
-        protected Figure(IEnumerable<double> x, IEnumerable<double> y)
-        {
-            _arrX = x.ToList();
-            _arrY = y.ToList();
-        }
-    
+        protected Figure() {}
+
         #endregion
     
         #region Methods
@@ -55,12 +51,10 @@ namespace SharpPlot.Canvas.Figure
 
         private List<string> _streamPoints()
         {
-            var commands = new List<string>();
-            for (int Idx = 0; Idx < _arrX.Count; Idx++)
-            {
-                commands.Add($"{_arrX[Idx]} {_arrY[Idx]}");
-            }
-        
+            var x = ArrX.ToList();
+            var y = ArrY.ToList();
+            var commands = x.Select((t, idx) => $"{t} {y[idx]}").ToList();
+
             commands.Add("e" + Environment.NewLine);
 
             return commands;
@@ -98,18 +92,6 @@ namespace SharpPlot.Canvas.Figure
     
     public class Scatter : Figure
     {
-        #region Constructors
-        public Scatter(IEnumerable<double> x, IEnumerable<double>y): base(x, y){}
-        public Scatter(IEnumerable<double> x, IEnumerable<double> y, 
-            string title, double size, Marker marker, Color color): base(x, y)
-        {
-            Properties.Title = title;
-            Properties.Size = size;
-            Properties.Marker = marker;
-            Properties.Color = color;
-        }
-        #endregion
-
         #region Methods
         protected override string _getOptions()
         {
@@ -121,19 +103,6 @@ namespace SharpPlot.Canvas.Figure
     
     public class Line2D : Figure
     {
-
-        #region Constructor
-        public Line2D(IEnumerable<double> x, IEnumerable<double> y): base(x, y){}
-        public Line2D(IEnumerable<double> x, IEnumerable<double> y, 
-            string title, double width, DashType dashType, Color color): base(x, y)
-        {
-            Properties.Title = title;
-            Properties.Width = width;
-            Properties.DashType = dashType;
-            Properties.Color = color;
-        }
-        #endregion
-
         #region Methods
         protected override string _getOptions()
         {
