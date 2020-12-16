@@ -70,6 +70,12 @@ namespace SharpPlot
         private static Dictionary<int, Figure> _figuresDict = new Dictionary<int, Figure>();
         
         #endregion
+        
+        private static int _getNextId()
+        {
+            _figureCounter++;
+            return _figureCounter;
+        }
 
         public static void Start()
         {
@@ -148,48 +154,47 @@ namespace SharpPlot
         
         
         //TODO: Check x and y size before figure initialising
-        public static int PlotScatter(IEnumerable<double> x, IEnumerable<double> y)
+        public static (int, Figure) PlotScatter(IEnumerable<double> x, IEnumerable<double> y)
         {
-            _figureCounter++;
-            var figId = _figureCounter;
-            _figuresDict.Add(figId, new Scatter(x: x, y: y));
-            return figId;
+            Figure fig = new Scatter(x, y);
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
         }
-        public static int PlotScatter(IEnumerable<double> x, IEnumerable<double> y,
+        public static (int, Figure) PlotScatter(IEnumerable<double> x, IEnumerable<double> y,
             string title, double size=1, Marker marker=Marker.ColoredCircle, Color color=Color.Black)
         {
-            _figureCounter++;
-            var figId = _figureCounter;
-            _figuresDict.Add(figId, new Scatter(x: x, y: y, title: title, size: size, marker: marker, color: color));
-            return figId;
+            Figure fig = new Scatter(x: x, y: y, title: title, size: size, marker: marker, color: color);
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
         }
 
-        public static int PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, 
+        public static (int, Figure) PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, 
             string title, double width=1.0, DashType dashType=DashType.Solid,  Color color=Color.Black)
         {
-            _figureCounter++;
-            var figId = _figureCounter;
-            _figuresDict.Add(figId, new Line2D(x: x, y: y, 
-                title: title, width: width, dashType: dashType, color: color));
-            return figId;
+            Figure fig = new Line2D(x: x, y: y, title: title, width: width, dashType: dashType, color: color);
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
         }
 
-        public static int PlotLine2D(IEnumerable<double> x, IEnumerable<double> y)
+        public static (int, Figure) PlotLine2D(IEnumerable<double> x, IEnumerable<double> y)
         {
-            _figureCounter++;
-            var figId = _figureCounter;
-            _figuresDict.Add(figId, new Line2D(x: x, y: y));
-            return figId;
+            Figure fig = new Line2D(x: x, y: y);
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
         }
         
-        public static int PlotLine2D(DataSet ds, 
+        public static (int, Figure) PlotLine2D(DataSet ds, 
             string title, double width=1.0, DashType dashType=DashType.Solid, Color color=Color.Black)
         {
-            _figureCounter++;
-            var figId = _figureCounter;
-            _figuresDict.Add(figId, new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], 
-                title: title, width: width, dashType: dashType,color: color));
-            return figId;
+            Figure fig = new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title: title, width: width,
+                dashType: dashType, color: color);
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
         }
 
         public static void CleanData()

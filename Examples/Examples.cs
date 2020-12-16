@@ -22,13 +22,13 @@ class Program
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
         
         var dataSet = new DataSet(x, tanX);
-        var whitDataSetsId = Gnuplot.PlotLine2D(dataSet, "WithDataSets", width: 2, dashType: DashType.DashDotted, Color.Navy);
+        var (lineDataSetId, lineDataset) = Gnuplot.PlotLine2D(dataSet, "WithDataSets", width: 2, dashType: DashType.DashDotted, Color.Navy);
 
         // Gnuplot Example 1:
-        var test0 = Gnuplot.PlotScatter(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);
-        var test1 = Gnuplot.PlotLine2D(x, sinX, "Test 1", width: 2, dashType: DashType.DashDoubleDotted, Color.Red);
-        var test2 = Gnuplot.PlotScatter(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle, color: Color.Grey);
-        var test3 = Gnuplot.PlotLine2D(x, sincostanX, "Test 3", width:0.5, dashType: DashType.Solid, Color.Green);
+        var (test0Id, test0) = Gnuplot.PlotScatter(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);
+        var (test1Id, test1) = Gnuplot.PlotLine2D(x, sinX, "Test 1", width: 2, dashType: DashType.DashDoubleDotted, Color.Red);
+        var (test2Id, test2) = Gnuplot.PlotScatter(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle, color: Color.Grey);
+        var (test3Id, test3) = Gnuplot.PlotLine2D(x, sincostanX, "Test 3", width:0.5, dashType: DashType.Solid, Color.Green);
         
 
         Gnuplot.Axis.SetXTicks(new List<double>(){-4,-2, -1, 0, 1, 2, 4});
@@ -47,7 +47,7 @@ class Program
         Gnuplot.Axis.SetYRange(-1, 1);
         Gnuplot.Axis.SetXLabel("x");
         Gnuplot.Axis.SetYLabel("sin(x)");
-        var sinXId = Gnuplot.PlotLine2D(x, sinX);
+        var (sinXId, sinXFig) = Gnuplot.PlotLine2D(x, sinX);
         Gnuplot.Show(); 
         Gnuplot.Wait();
 
