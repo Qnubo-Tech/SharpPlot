@@ -13,8 +13,8 @@ namespace SharpPlot.Canvas.Figure
 
         protected readonly FigureProperties Properties = new FigureProperties();
 
-        protected List<double> ArrX;
-        protected List<double> ArrY;
+        private readonly List<double> _arrX;
+        private readonly List<double> _arrY;
 
         #endregion
     
@@ -27,6 +27,12 @@ namespace SharpPlot.Canvas.Figure
         #region Constructors
 
         public Figure(){}
+
+        protected Figure(IEnumerable<double> x, IEnumerable<double> y)
+        {
+            _arrX = x.ToList();
+            _arrY = y.ToList();
+        }
     
         #endregion
     
@@ -50,9 +56,9 @@ namespace SharpPlot.Canvas.Figure
         private List<string> _streamPoints()
         {
             var commands = new List<string>();
-            for (int Idx = 0; Idx < ArrX.Count; Idx++)
+            for (int Idx = 0; Idx < _arrX.Count; Idx++)
             {
-                commands.Add($"{ArrX[Idx]} {ArrY[Idx]}");
+                commands.Add($"{_arrX[Idx]} {_arrY[Idx]}");
             }
         
             commands.Add("e" + Environment.NewLine);
@@ -63,10 +69,10 @@ namespace SharpPlot.Canvas.Figure
         private void _plotFromStdin()
         {
             List<string> commands = _streamPoints();
-        
-            for (int i = 0; i < commands.Count; i++)
+
+            foreach (var t in commands)
             {
-                Gnuplot.WriteCommand(commands[i]);
+                Gnuplot.WriteCommand(t);
             }
         }
     
@@ -93,42 +99,47 @@ namespace SharpPlot.Canvas.Figure
     public class Scatter : Figure
     {
         #region Constructors
+        public Scatter(IEnumerable<double> x, IEnumerable<double>y): base(x, y){}
         public Scatter(IEnumerable<double> x, IEnumerable<double> y, 
-            string title, double size, Marker marker, Color color)
+            string title, double size, Marker marker, Color color): base(x, y)
         {
             Properties.Title = title;
             Properties.Size = size;
             Properties.Marker = marker;
             Properties.Color = color;
-            ArrX = x.ToList();
-            ArrY = y.ToList();
         }
         #endregion
 
+        #region Methods
         protected override string _getOptions()
         {
             return $"u 1:2 with points ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
         }
+        #endregion
+
     }
     
     public class Line2D : Figure
     {
 
         #region Constructor
-        public Line2D(IEnumerable<double> x, IEnumerable<double> y, string title, double width, DashType dashType, Color color)
+        public Line2D(IEnumerable<double> x, IEnumerable<double> y): base(x, y){}
+        public Line2D(IEnumerable<double> x, IEnumerable<double> y, 
+            string title, double width, DashType dashType, Color color): base(x, y)
         {
             Properties.Title = title;
             Properties.Width = width;
             Properties.DashType = dashType;
             Properties.Color = color;
-            ArrX = x.ToList();
-            ArrY = y.ToList();
         }
         #endregion
-        
+
+        #region Methods
         protected override string _getOptions()
         {
             return $"u 1:2 with lines lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
         }
+        #endregion
+
     }
 }
