@@ -6,16 +6,12 @@ namespace SharpPlot.Canvas
 {
     public class Legend
     {
-        #region Attributes
-
-        private Position _position = Position.RightTop;
-
-        #endregion
-
         #region Properties
-
-        private string LegendPosition => _positionToString(_position);
-        private string Command => $"set key {LegendPosition}{Environment.NewLine}";
+        public Position Position { get; private set; } = Position.RightTop;
+        
+        private string LegendPosition => _positionToString(Position);
+        
+        public string Command => $"set key {LegendPosition}{Environment.NewLine}";
 
         #endregion
         #region Constructor
@@ -32,7 +28,7 @@ namespace SharpPlot.Canvas
 
         public void SetPosition(Position position)
         {
-            _position = position;
+            Position = position;
             Gnuplot.WriteCommand(Command);
         }
         #endregion
