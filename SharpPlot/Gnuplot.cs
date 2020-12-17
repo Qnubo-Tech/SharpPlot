@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using SharpPlot.Canvas;
 using SharpPlot.Canvas.Figure;
@@ -65,12 +64,17 @@ namespace SharpPlot
         public static string LinuxBinFolder = "/usr/local/bin";
         public static string OSXBinFolder = "/usr/local/bin";
         public static Axis Axis;
+        public static Legend Legend;
 
         private static int _figureCounter = 0;
         private static Dictionary<int, Figure> _figuresDict = new Dictionary<int, Figure>();
         
         #endregion
-        
+
+        #region Properties
+        private static string UnsetColorBoxCommand => $"unset colorbox{Environment.NewLine}";
+        #endregion
+
         private static int _getNextId()
         {
             _figureCounter++;
@@ -109,9 +113,10 @@ namespace SharpPlot
             _gnuplotProcessInit(file);
             
             _gnuplotCmd = _gnuplotProcess.StandardInput;
-            _gnuplotCmd.WriteLine($"unset colorbox{Environment.NewLine}");
+            _gnuplotCmd.WriteLine(UnsetColorBoxCommand);
 
             Axis = new Axis();
+            Legend = new Legend();
         }
         private static void _gnuplotProcessInit(string gnuplotFile)
         {   

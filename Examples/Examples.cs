@@ -41,7 +41,7 @@ class Program
         Gnuplot.Axis.AddTicks(labelValues: xticks, axis: 0);
         Gnuplot.Axis.SetXLabel(label: "x-axis", rotation: -20);
         Gnuplot.Axis.SetYLabel(label: "y-axis");
-        
+        Gnuplot.Legend.SetPosition(position: Position.LeftTop);
         Gnuplot.Show();
         Gnuplot.Wait();
 
