@@ -23,8 +23,11 @@ class Program
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
         
         var dataSet = new DataSet(x, tanX);
-        var (lineDataSetId, lineDataset) = Gnuplot.Plot<Line2D>(ds: dataSet, title: "WithDataSets", 
-            width: 2, dashType: DashType.DashDotted, color: Color.Navy);
+        var (lineDatasetId, lineDataset) = Gnuplot.Plot<Line2D>(ds: dataSet);
+        lineDataset.SetTitle(title: "WithDataSets");
+        lineDataset.SetWidth(width: 2);
+        lineDataset.SetDashType(dashType: DashType.DashDotted);
+        lineDataset.SetColor(color: Color.Navy);
 
         // Gnuplot Example 1:
         var (test0Id, test0) = Gnuplot.Plot<Scatter>(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);

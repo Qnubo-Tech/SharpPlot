@@ -8,28 +8,23 @@ namespace SharpPlot.Canvas.Figure
     public class Figure
     {
         #region Attributes
-
         private const string PlotInit = " '-' ";
 
         protected internal readonly FigureProperties Properties = new FigureProperties();
 
         protected internal IEnumerable<double> ArrX;
         protected internal IEnumerable<double> ArrY;
-
         #endregion
     
         #region Properties
-        public string HeaderPlot => _getHeaderPlot();
-        public string Options => _getOptions();
-        public List<string> DataPoints => _streamPoints(); 
+
+        internal string HeaderPlot => _getHeaderPlot();
+        private string Options => _getOptions();
+        internal List<string> DataPoints => _streamPoints(); 
         #endregion
     
         #region Constructors
-
-        //public Figure(){}
-
         protected Figure() {}
-
         #endregion
     
         #region Methods
@@ -77,9 +72,29 @@ namespace SharpPlot.Canvas.Figure
             _plotFromStdin();
         }
 
+        public void SetSize(double size)
+        {
+            Properties.Size = size;
+        }
+        
         public void SetColor(Color color)
         {
             Properties.Color = color;
+        }
+
+        public void SetDashType(DashType dashType)
+        {
+            Properties.DashType = dashType;
+        }
+
+        public void SetMarker(Marker marker)
+        {
+            Properties.Marker = marker;
+        }
+
+        public void SetWidth(double width)
+        {
+            Properties.Width = width;
         }
 
         public void SetTitle(string title)
