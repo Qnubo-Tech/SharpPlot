@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using SharpPlot.Utils;
 
+[assembly: InternalsVisibleTo("SharpPlot.UnitTest")]
 namespace SharpPlot.Canvas.Figure
 {
     public class Figure
@@ -10,21 +12,19 @@ namespace SharpPlot.Canvas.Figure
         #region Attributes
         private const string PlotInit = " '-' ";
 
-        protected internal readonly FigureProperties Properties = new FigureProperties();
-
         protected internal IEnumerable<double> ArrX;
         protected internal IEnumerable<double> ArrY;
         #endregion
     
         #region Properties
-
+        public FigureProperties Properties { get; protected internal set; } = new FigureProperties();
         internal string HeaderPlot => _getHeaderPlot();
-        private string Options => _getOptions();
-        internal List<string> DataPoints => _streamPoints(); 
+        internal string Options => _getOptions();
+        internal List<string> DataPoints => _streamPoints();
         #endregion
     
         #region Constructors
-        protected Figure() {}
+        protected internal Figure() {}
         #endregion
     
         #region Methods
@@ -39,9 +39,8 @@ namespace SharpPlot.Canvas.Figure
             return "";
         }
         private void _plotBegin()
-        {
-            var command = PlotInit + Options + $" title '{Properties.Title}' ";
-            Gnuplot.WriteCommand(command);
+        { 
+            Gnuplot.WriteCommand(HeaderPlot);
         }
 
         private List<string> _streamPoints()
