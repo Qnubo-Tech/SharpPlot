@@ -170,13 +170,20 @@ namespace SharpPlot
         {
             PlotType = plotType;
         }
+
+        private static bool _checkCommensurability(IEnumerable<IEnumerable<double>> z)
+        {
+            var lengths = z.Select(e => e.Count()).ToList();
+            var commensurate = lengths.Aggregate(true, (current, t) => (current && (t == lengths.First())));
+            if (!commensurate) {throw new ApplicationException($"[!] Shape: {string.Join(", ", lengths)}");}
+            return true;
+        }
         
-        
-        //TODO: Check x and y size before figure initialising
         public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y) 
             where TFigure : Figure, new()
         {
-            var fig = new TFigure {ArrX = x, ArrY = y};
+            _checkCommensurability(new [] {x, y});
+            var fig = new TFigure {ArrX = x.ToArray(), ArrY = y};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
             return (figId, fig);
@@ -185,6 +192,7 @@ namespace SharpPlot
         public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y, IEnumerable<double> z) 
             where TFigure : Figure, new()
         {
+            _checkCommensurability(new [] {x, y, z});
             var fig = new TFigure {ArrX = x, ArrY = y, ArrZ = z};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
@@ -194,6 +202,7 @@ namespace SharpPlot
         public static (int, TFigure) Plot<TFigure>(DataSet ds) 
             where TFigure : Figure, new()
         {
+            _checkCommensurability(new [] {ds[AxisName.X], ds[AxisName.Y]});
             var fig = new TFigure {ArrX = ds[AxisName.X], ArrY = ds[AxisName.Y]};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
@@ -205,6 +214,7 @@ namespace SharpPlot
             Marker marker = Marker.ColoredCircle, Color color = Color.Black)
             where TFigure : Figure, new()
         {
+            _checkCommensurability(new [] {x, y});
             var fig = new TFigure {
                 ArrX = x, 
                 ArrY = y, 
@@ -226,6 +236,7 @@ namespace SharpPlot
             Marker marker = Marker.ColoredCircle, Color color = Color.Black)
             where TFigure : Figure, new()
         {
+            _checkCommensurability(new [] {x, y, z});
             var fig = new TFigure {
                 ArrX = x, 
                 ArrY = y,
@@ -248,6 +259,7 @@ namespace SharpPlot
             Marker marker = Marker.ColoredCircle, Color color = Color.Black)
             where TFigure : Figure, new()
         {
+            _checkCommensurability(new[] {ds[AxisName.X], ds[AxisName.Y]});
             var fig = new TFigure {
                 ArrX = ds[AxisName.X], 
                 ArrY = ds[AxisName.Y], 
