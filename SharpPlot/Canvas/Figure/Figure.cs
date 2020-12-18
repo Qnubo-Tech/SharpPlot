@@ -168,5 +168,17 @@ namespace SharpPlot.Canvas.Figure
         }
 
         #endregion
-    } 
+    }
+
+    public class Impulse : Figure
+    {
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2 with impulses lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        #endregion
+    }
 }

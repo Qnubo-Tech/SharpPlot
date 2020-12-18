@@ -21,6 +21,7 @@ class Program
         var sinX = x.Select(Math.Sin).ToArray();
         var sincosX = sinX.Select(Math.Cos).ToArray();
         var sincostanX = sincosX.Select(Math.Tan).ToArray();
+        var expsinX = sinX.Select((e, idx) => e * Math.Exp(-x[idx] / 4)).ToArray();
         
         var dataSet = new DataSet(x, tanX);
         var (lineDatasetId, lineDataset) = Gnuplot.Plot<Line2D>(ds: dataSet);
@@ -45,6 +46,17 @@ class Program
         Gnuplot.Show();
         Gnuplot.Wait();
         
+        // Gnuplot Impulse example
+        Gnuplot.CleanData();
+        var (test4Id, test4) = Gnuplot.Plot<Impulse>(x, expsinX);
+        test4.SetColor(Color.Brown);
+        var (test5Id, test5) = Gnuplot.Plot<Scatter2D>(x, expsinX);
+        test5.SetColor(Color.Black);
+        test5.SetSize(1.25);
+        test5.SetMarker(Marker.BlankCircle);
+        Gnuplot.Show();
+        Gnuplot.Wait();
+
         // Gnuplot Example 3D
         Gnuplot.CleanData();
         Gnuplot.SetPlotType(PlotType.Splot);
