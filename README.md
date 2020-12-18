@@ -5,13 +5,13 @@
 # SharpPlot
 
 [![Unit tests](https://github.com/Qnubo-Tech/SharpPlot/workflows/UnitTests/badge.svg)](https://github.com/Qnubo-Tech/SharpPlot/actions?query=workflow%3AUnitTests)
-[![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](http://ansicolortags.readthedocs.io/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://github.com/Qnubo-Tech/SharpPlot/blob/master/README.md)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/Qnubo-Tech/SharpPlot/blob/master/LICENSE.md)
 
 
-[![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)](https://forthebadge.com)
-[![ForTheBadge built-by-developers](http://ForTheBadge.com/images/badges/built-by-developers.svg)](https://GitHub.com/Naereen/)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)]()
+[![ForTheBadge built-by-developers](http://ForTheBadge.com/images/badges/built-by-developers.svg)](https://github.com/Qnubo-Tech)
 
 ## Welcome
 
