@@ -12,7 +12,7 @@ namespace SharpPlot.UnitTest.Canvas
     public class TestFigure
     {
         private Figure _figure;
-        private Scatter _scatter;
+        private Scatter2D _scatter2D;
         private Line2D _line2D;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
@@ -24,7 +24,7 @@ namespace SharpPlot.UnitTest.Canvas
             {
                 ArrX = _x, ArrY = _y
             };
-            _scatter = new Scatter();
+            _scatter2D = new Scatter2D();
             _line2D = new Line2D();
         }
 
@@ -100,9 +100,9 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestScatterOptions()
         {
-            var expectedOps = $"u 1:2 with points ps {_scatter.Properties.Size} pt {(int) _scatter.Properties.Marker} " +
-                              $"lc rgb '{_scatter.Properties.Color.ToString().ToLower()}'";
-            Assert.AreEqual(expectedOps, _scatter.Options);
+            var expectedOps = $"u 1:2 with points ps {_scatter2D.Properties.Size} pt {(int) _scatter2D.Properties.Marker} " +
+                              $"lc rgb '{_scatter2D.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _scatter2D.Options);
         }
 
         [Test]

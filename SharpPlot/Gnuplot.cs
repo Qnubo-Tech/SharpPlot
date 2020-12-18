@@ -57,8 +57,7 @@ namespace SharpPlot
         private static string _gnuplotStr = "gnuplot";
         private static StreamWriter _gnuplotCmd;
         private static Process _gnuplotProcess;
-        private static string _plotInit = Environment.NewLine + "plot";
-
+        
         public static string WinDrive = "F";
         public static string WinBinFolder = @"Program Files\gnuplot\bin";
         public static string LinuxBinFolder = "/usr/local/bin";
@@ -72,6 +71,11 @@ namespace SharpPlot
         #endregion
 
         #region Properties
+
+        private static PlotType PlotType { get; set; } = PlotType.Plot;
+
+        private static string PlotInit => _getPlotInit();
+        
         private static string UnsetColorBoxCommand => $"unset colorbox{Environment.NewLine}";
         #endregion
 
@@ -79,6 +83,11 @@ namespace SharpPlot
         {
             _figureCounter++;
             return _figureCounter;
+        }
+
+        private static string _getPlotInit()
+        {
+            return Environment.NewLine + PlotType.ToString().ToLower();
         }
 
         public static void Start()
@@ -156,6 +165,11 @@ namespace SharpPlot
         {
             return _figuresDict[id];
         }
+
+        public static void SetPlotType(PlotType plotType)
+        {
+            PlotType = plotType;
+        }
         
         
         //TODO: Check x and y size before figure initialising
@@ -163,6 +177,15 @@ namespace SharpPlot
             where TFigure : Figure, new()
         {
             var fig = new TFigure {ArrX = x, ArrY = y};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y, IEnumerable<double> z) 
+            where TFigure : Figure, new()
+        {
+            var fig = new TFigure {ArrX = x, ArrY = y, ArrZ = z};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
             return (figId, fig);
@@ -185,6 +208,28 @@ namespace SharpPlot
             var fig = new TFigure {
                 ArrX = x, 
                 ArrY = y, 
+                Properties =
+                {
+                    Color = color, Marker = marker, 
+                    DashType = dashType, Size = size, 
+                    Title = title, Width = width
+                }
+            };
+
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y, IEnumerable<double> z,
+            string title, double size = 1, double width=1.0, DashType dashType=DashType.Solid,
+            Marker marker = Marker.ColoredCircle, Color color = Color.Black)
+            where TFigure : Figure, new()
+        {
+            var fig = new TFigure {
+                ArrX = x, 
+                ArrY = y,
+                ArrZ = z,
                 Properties =
                 {
                     Color = color, Marker = marker, 
@@ -222,6 +267,10 @@ namespace SharpPlot
         public static void CleanData()
         {
            _figuresDict.Clear();
+           PlotType = PlotType.Plot;
+           Axis = new Axis();
+           Legend = new Legend();
+           WriteCommand("reset session");
         }
 
 
@@ -238,7 +287,7 @@ namespace SharpPlot
         
         public static void Show()
         {
-            var plotInit = _figuresDict.Aggregate(_plotInit, (current, idFigure) => current + (idFigure.Value.HeaderPlot + " ,"));
+            var plotInit = _figuresDict.Aggregate(PlotInit, (current, idFigure) => current + (idFigure.Value.HeaderPlot + " ,"));
 
             plotInit += Environment.NewLine;
             WriteCommand(plotInit);

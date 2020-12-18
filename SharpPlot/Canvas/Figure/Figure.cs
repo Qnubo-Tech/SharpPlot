@@ -14,9 +14,12 @@ namespace SharpPlot.Canvas.Figure
 
         protected internal IEnumerable<double> ArrX;
         protected internal IEnumerable<double> ArrY;
+        protected internal IEnumerable<double> ArrZ;
         #endregion
     
         #region Properties
+
+        protected virtual PlotType PlotType => PlotType.Plot;
         public FigureProperties Properties { get; protected internal set; } = new FigureProperties();
         internal string HeaderPlot => _getHeaderPlot();
         internal string Options => _getOptions();
@@ -47,7 +50,18 @@ namespace SharpPlot.Canvas.Figure
         {
             var x = ArrX.ToList();
             var y = ArrY.ToList();
-            var commands = x.Select((t, idx) => $"{t} {y[idx]}").ToList();
+            List<string> commands = new List<string>();
+            switch (PlotType)
+            {
+                case PlotType.Plot:
+                    commands = x.Select((t, idx) => $"{t} {y[idx]}").ToList();
+                    break;
+                
+                case PlotType.Splot:
+                    var z = ArrZ.ToList();
+                    commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
+                    break;
+            }
 
             commands.Add("e" + Environment.NewLine);
 
@@ -104,7 +118,7 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     }
     
-    public class Scatter : Figure
+    public class Scatter2D : Figure
     {
         #region Methods
         protected override string _getOptions()
@@ -125,4 +139,34 @@ namespace SharpPlot.Canvas.Figure
         #endregion
 
     }
+
+    public class Scatter3D : Figure
+    {
+        #region Properties
+        protected override PlotType PlotType => PlotType.Splot;
+        #endregion
+        
+        #region Methods
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with points ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+        #endregion
+    }
+
+    public class Line3D : Figure
+    {
+        #region Properties
+        protected override PlotType PlotType => PlotType.Splot;
+        #endregion
+        
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with lines lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        #endregion
+    } 
 }

@@ -30,9 +30,9 @@ class Program
         lineDataset.SetColor(color: Color.Navy);
 
         // Gnuplot Example 1:
-        var (test0Id, test0) = Gnuplot.Plot<Scatter>(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);
+        var (test0Id, test0) = Gnuplot.Plot<Scatter2D>(x, x, "Test 0", size: 0.7, marker: Marker.ColoredCircle, color: Color.SteelBlue);
         var (test1Id, test1) = Gnuplot.Plot<Line2D>(x, sinX, "Test 1", width: 2, dashType: DashType.DashDoubleDotted, color:Color.Red);
-        var (test2Id, test2) = Gnuplot.Plot<Scatter>(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle, color: Color.Grey);
+        var (test2Id, test2) = Gnuplot.Plot<Scatter2D>(x, sincosX, "Test 2", size: 1, marker: Marker.BlankTriangle, color: Color.Grey);
         var (test3Id, test3) = Gnuplot.Plot<Line2D>(x, sincostanX, "Test 3", width:0.5, dashType: DashType.Solid, color: Color.Green);
 
         Gnuplot.Axis.SetXTicks(new List<double>(){-4,-2, -1, 0, 1, 2, 4});
@@ -42,6 +42,25 @@ class Program
         Gnuplot.Axis.SetXLabel(label: "x-axis", rotation: -20);
         Gnuplot.Axis.SetYLabel(label: "y-axis");
         Gnuplot.Legend.SetPosition(position: Position.LeftTop);
+        Gnuplot.Show();
+        Gnuplot.Wait();
+        
+        // Gnuplot Example 3D
+        Gnuplot.CleanData();
+        Gnuplot.SetPlotType(PlotType.Splot);
+        Gnuplot.Axis.SetXRange(-8, 8);
+        Gnuplot.Axis.SetYRange(-1, 1);
+        Gnuplot.Axis.SetZRange(0, 2);
+        Gnuplot.Axis.SetXLabel("x");
+        Gnuplot.Axis.SetYLabel("y");
+        Gnuplot.Axis.SetZLabel("z");
+        Gnuplot.Axis.AddTicks(labelValues: xticks, axis: 0);
+        var (id, fig) = Gnuplot.Plot<Line3D>(x, sinX, x.Select(e=> 0.1).ToList(), 
+            title: "foo",color: Color.SteelBlue, width: 4, dashType:DashType.DashDotted);
+        var (id2, fig2) = Gnuplot.Plot<Scatter3D>(x, sinX, sincostanX);
+        fig2.SetColor(Color.Grey);
+        fig2.SetTitle("bar");
+        Gnuplot.Legend.SetPosition(Position.RightBottom);
         Gnuplot.Show();
         Gnuplot.Wait();
 
