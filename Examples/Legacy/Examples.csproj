@@ -10,7 +10,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SharpPlot\SharpPlot.csproj" />
+      <ProjectReference Include="..\..\SharpPlot\SharpPlot.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Legacy\bin\Release\netcoreapp3.1" />
     </ItemGroup>
 
 </Project>
