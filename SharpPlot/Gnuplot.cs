@@ -171,6 +171,16 @@ namespace SharpPlot
             PlotType = plotType;
         }
 
+        public static void SetIsolineDensiy(double density)
+        {
+            WriteCommand($"set isosamples {density}");
+        }
+
+        public static void SetHidden3D()
+        {
+            WriteCommand($"set hidden3d");
+        }
+
         private static bool _checkCommensurability(IEnumerable<IEnumerable<double>> z)
         {
             var lengths = z.Select(e => e.Count()).ToList();
@@ -194,6 +204,15 @@ namespace SharpPlot
         {
             _checkCommensurability(new [] {x, y, z});
             var fig = new TFigure {ArrX = x, ArrY = y, ArrZ = z};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(string function) 
+            where TFigure : Figure, new()
+        {
+            var fig = new TFigure(){ Properties = {Function = function}};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
             return (figId, fig);

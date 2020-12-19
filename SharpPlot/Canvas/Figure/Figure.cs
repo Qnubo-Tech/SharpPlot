@@ -10,8 +10,6 @@ namespace SharpPlot.Canvas.Figure
     public class Figure
     {
         #region Attributes
-        private const string PlotInit = " '-' ";
-
         protected internal IEnumerable<double> ArrX;
         protected internal IEnumerable<double> ArrY;
         protected internal IEnumerable<double> ArrZ;
@@ -21,9 +19,10 @@ namespace SharpPlot.Canvas.Figure
 
         protected virtual PlotType PlotType => PlotType.Plot;
         public FigureProperties Properties { get; protected internal set; } = new FigureProperties();
+        protected virtual string PlotInit => " '-' ";
         internal string HeaderPlot => _getHeaderPlot();
         internal string Options => _getOptions();
-        internal List<string> DataPoints => _streamPoints();
+        protected internal virtual List<string> DataPoints => _streamPoints();
         #endregion
     
         #region Constructors
@@ -168,6 +167,21 @@ namespace SharpPlot.Canvas.Figure
         }
 
         #endregion
+    }
+
+    public class Surface3D : Figure
+    {
+        #region Properties
+
+        protected override string PlotInit => "";
+        protected internal override List<string> DataPoints => new List<string>();
+
+        #endregion
+        protected override string _getOptions()
+        {
+            return $" {Properties.Function} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+        
     }
 
     public class Impulse : Figure

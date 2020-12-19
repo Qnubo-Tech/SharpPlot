@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Numerics;
-using MathNet.Numerics;
-using MathNet.Numerics.LinearAlgebra;
 using SharpPlot;
-using SharpPlot.Canvas;
 using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
 
@@ -73,6 +68,23 @@ class Program
         fig2.SetColor(Color.Grey);
         fig2.SetTitle("bar");
         Gnuplot.Legend.SetPosition(Position.RightBottom);
+        Gnuplot.Show();
+        Gnuplot.Wait();
+        
+        // Gnuplo Example Surface with lines
+        Gnuplot.CleanData();
+        Gnuplot.SetPlotType(PlotType.Splot);
+        Gnuplot.SetIsolineDensiy(30);
+        var (id3, fig3) = Gnuplot.Plot<Surface3D>(function: "x**2-y**2");
+        var (id4, fig4) = Gnuplot.Plot<Surface3D>(function: "x**2+y**2");
+        var (id5, fig5) = Gnuplot.Plot<Line3D>(x: x.Select(e=> 0.0).ToList(), y: x, z: x.Select(e=> -(e*e)).ToList());
+        var (id6, fig6) = Gnuplot.Plot<Line3D>(x: x, y: x.Select(e=> 0.0).ToList(), z: x.Select(e=> (e*e)).ToList());
+        fig3.SetColor(Color.Purple);
+        fig3.SetTitle("x**2-y**2");
+        fig4.SetColor(Color.Navy);
+        fig4.SetTitle("x**2+y**2");
+        fig5.SetWidth(2.5);
+        fig6.SetWidth(2.5);
         Gnuplot.Show();
         Gnuplot.Wait();
 
