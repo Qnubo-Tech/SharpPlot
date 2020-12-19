@@ -1,0 +1,5 @@
+# Run manually to reformat a file:
+# clang-format -i --style=file <file>
+Language: CSharp
+BasedOnStyle:  Google
+ColumnLimit: 100

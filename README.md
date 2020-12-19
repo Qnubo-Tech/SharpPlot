@@ -116,7 +116,7 @@ and you should get your first floating graph example with [#Plot](), congratulat
 
 ## Contributing
 
-Our style of code adheres to Google's standards ([google-styleguide](https://google.github.io/styleguide/csharp-style.html)). We want to keep the source consistent, readable and easy to merge. For this reason we use rigid coding style and we expect all contributors to conform this guidelines. Please, use [.clang-format](https://github.com/migduroli/pineurodes/blob/main/.clang-format) to check your formatting.
+Our style of code adheres to Google's standards ([google-styleguide](https://google.github.io/styleguide/csharp-style.html)). We want to keep the source consistent, readable and easy to merge. For this reason we use rigid coding style and we expect all contributors to conform this guidelines. Please, use [.clang-format](.clang-format) to check your formatting.
 
 ## License
 
