@@ -6,7 +6,7 @@
 
 [![Unit tests](https://github.com/Qnubo-Tech/SharpPlot/workflows/UnitTests/badge.svg)](https://github.com/Qnubo-Tech/SharpPlot/actions?query=workflow%3AUnitTests)
 [![Documentation Status](https://readthedocs.org/projects/ansicolortags/badge/?version=latest)](https://github.com/Qnubo-Tech/SharpPlot/blob/master/README.md)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/Qnubo-Tech/SharpPlot/blob/master/LICENSE.md)
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-sharp.svg)]()
@@ -120,4 +120,4 @@ Our style of code adheres to Google's standards ([google-styleguide](https://goo
 
 ## License
 
-This project is licensed under the GNU Academic Free License ("AFL") 3.0 - see the [LICENSE](LICENSE.md) file for details
+This project is licensed under the **3-Clause BSD License** - see the [LICENSE](LICENSE.md) file for details.
