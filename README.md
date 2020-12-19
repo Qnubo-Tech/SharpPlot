@@ -89,7 +89,7 @@ Press any key + Enter to continue...
 
 and you should get your first floating graph example with [#Plot](), congratulations!
 
-<img src="Examples/Figures/simple-project.png" alt="simple-project" style="zoom:50%;" />
+<img src="Examples/001-GettingStarted/Figures/simple-project.png" alt="simple-project" style="zoom:50%;" />
 
 ## Requirements
 
