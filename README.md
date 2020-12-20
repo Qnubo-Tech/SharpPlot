@@ -89,7 +89,7 @@ Press any key + Enter to continue...
 
 and you should get your first floating graph example with [#Plot](), congratulations!
 
-<img src="Examples/Figures/simple-project.png" alt="simple-project" style="zoom:50%;" />
+<img src="Examples/001-GettingStarted/Figures/simple-project.png" alt="simple-project" style="zoom:50%;" />
 
 ## Requirements
 
@@ -100,12 +100,9 @@ and you should get your first floating graph example with [#Plot](), congratulat
 
 ## Main features
 
-(TBC)
+We think the best way to learn is by example and documentation. For this reason, we have prepared a set of examples which are enclosed in a different solution under the [Examples](Examples) folder. There you will find different small projects that will help you understand the use of [#Plot]():
 
-
-## Platforms
-
-(TBC)
+* [001-GettingStarted](Examples/001-GettingStarted): The example we have followed in the previous section, with a little README file, and a Jupyter notebook!
 
 ## Authors
 
@@ -116,7 +113,7 @@ and you should get your first floating graph example with [#Plot](), congratulat
 
 ## Contributing
 
-Our style of code adheres to Google's standards ([google-styleguide](https://google.github.io/styleguide/csharp-style.html)). We want to keep the source consistent, readable and easy to merge. For this reason we use rigid coding style and we expect all contributors to conform this guidelines. Please, use [.clang-format](.clang-format) to check your formatting.
+To have a better understanding on how to make contributions, please read the [CONTRIBUTING](CONTRIBUTING.md) file. Our style of code adheres to Google's standards ([google-styleguide](https://google.github.io/styleguide/csharp-style.html)). We want to keep the source consistent, readable and easy to merge. For this reason we use rigid coding style and we expect all contributors to conform this guidelines. Please, use [.clang-format](.clang-format) to check your formatting. 
 
 ## License
 
