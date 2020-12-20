@@ -13,10 +13,16 @@ namespace SharpPlot.UnitTest.Canvas
     {
         private Figure _figure;
         private Scatter2D _scatter2D;
+        private Scatter3D _scatter3D;
         private Line2D _line2D;
+        private Line3D _line3D;
+        private Impulse _impulse;
+        private Surface3D _surface3D;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
-
+        private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
+        private string _function = "x**2+y**2";
+        
         [SetUp]
         public void SetUp()
         {
@@ -25,7 +31,18 @@ namespace SharpPlot.UnitTest.Canvas
                 ArrX = _x, ArrY = _y
             };
             _scatter2D = new Scatter2D();
+            _scatter3D = new Scatter3D()
+            {
+                ArrX = _x, ArrY = _y, ArrZ = _z
+            };
             _line2D = new Line2D();
+            _line3D = new Line3D();
+            _impulse = new Impulse();
+            _surface3D = new Surface3D()
+            {
+                Properties = {Function = _function}
+            };
+            
         }
 
         [Test]
@@ -36,6 +53,7 @@ namespace SharpPlot.UnitTest.Canvas
             Assert.AreEqual(Marker.ColoredCircle, _figure.Properties.Marker);
             Assert.AreEqual(1, _figure.Properties.Width);
             Assert.AreEqual(DashType.Solid, _figure.Properties.DashType);
+            Assert.AreEqual("", _figure.Properties.Function);
             Assert.AreEqual("", _figure.Properties.Title);
         }
 
@@ -111,6 +129,49 @@ namespace SharpPlot.UnitTest.Canvas
             var expectedOps = $"u 1:2 with lines lw {_line2D.Properties.Width} dt {(int) _line2D.Properties.DashType} " +
                               $"lc rgb '{_line2D.Properties.Color.ToString().ToLower()}'";
             Assert.AreEqual(expectedOps, _line2D.Options);
+        }
+
+        [Test]
+        public void TestScatter3D()
+        {
+            Assert.AreEqual(PlotType.Splot, _scatter3D.PlotType);
+            
+            var expectedOps = $"u 1:2:3 with points ps {_scatter3D.Properties.Size} pt {(int) _scatter3D.Properties.Marker} " +
+                              $"lc rgb '{_scatter3D.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _scatter3D.Options);
+            
+            var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]}").ToList();
+            expectedDataPoints.Add("e" + Environment.NewLine);
+            Assert.AreEqual(expectedDataPoints, _scatter3D.DataPoints);
+        }
+
+        [Test]
+        public void TestLine3D()
+        {
+            Assert.AreEqual(PlotType.Splot, _line3D.PlotType);
+            
+            var expectedOps = $"u 1:2:3 with lines lw {_line3D.Properties.Width} dt {(int) _line3D.Properties.DashType} " +
+                              $"lc rgb '{_line3D.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _line3D.Options);
+        }
+
+        [Test]
+        public void TestImpulse()
+        {
+            var expectedOps = $"u 1:2 with impulses lw {_impulse.Properties.Width} dt {(int) _impulse.Properties.DashType} " +
+                              $"lc rgb '{_impulse.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _impulse.Options);
+        }
+
+        [Test]
+        public void TestSurface()
+        {
+            Assert.AreEqual(_function, _surface3D.Properties.Function);
+            Assert.AreEqual("", _surface3D.PlotInit);
+            Assert.AreEqual(new List<string>(), _surface3D.DataPoints);
+            
+            var expectedOps = $" {_surface3D.Properties.Function} lc rgb '{_surface3D.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _surface3D.Options);
         }
         
     }

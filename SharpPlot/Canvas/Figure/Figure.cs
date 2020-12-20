@@ -17,9 +17,9 @@ namespace SharpPlot.Canvas.Figure
     
         #region Properties
 
-        protected virtual PlotType PlotType => PlotType.Plot;
+        protected internal virtual PlotType PlotType => PlotType.Plot;
         public FigureProperties Properties { get; protected internal set; } = new FigureProperties();
-        protected virtual string PlotInit => " '-' ";
+        protected internal virtual string PlotInit => " '-' ";
         internal string HeaderPlot => _getHeaderPlot();
         internal string Options => _getOptions();
         protected internal virtual List<string> DataPoints => _streamPoints();
@@ -142,7 +142,7 @@ namespace SharpPlot.Canvas.Figure
     public class Scatter3D : Figure
     {
         #region Properties
-        protected override PlotType PlotType => PlotType.Splot;
+        protected internal override PlotType PlotType => PlotType.Splot;
         #endregion
         
         #region Methods
@@ -156,7 +156,7 @@ namespace SharpPlot.Canvas.Figure
     public class Line3D : Figure
     {
         #region Properties
-        protected override PlotType PlotType => PlotType.Splot;
+        protected internal override PlotType PlotType => PlotType.Splot;
         #endregion
         
         #region Methods
@@ -173,7 +173,7 @@ namespace SharpPlot.Canvas.Figure
     {
         #region Properties
 
-        protected override string PlotInit => "";
+        protected internal override string PlotInit => "";
         protected internal override List<string> DataPoints => new List<string>();
 
         #endregion
