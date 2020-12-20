@@ -100,7 +100,7 @@ and you should get your first floating graph example with [#Plot](), congratulat
 
 ## Main features
 
-We think the best way to learn is by example and documentation. For this reason, we have prepared a set of examples which are enclosed in a different solution under the [Examples](Examples) folder. There you will find different small projects that will help you understand the use of [#Plot](). There you'll find:
+We think the best way to learn is by example and documentation. For this reason, we have prepared a set of examples which are enclosed in a different solution under the [Examples](Examples) folder. There you will find different small projects that will help you understand the use of [#Plot]():
 
 * [001-GettingStarted](Examples/001-GettingStarted): The example we have followed in the previous section, with a little README file, and a Jupyter notebook!
 
