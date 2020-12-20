@@ -139,6 +139,19 @@ namespace SharpPlot.Canvas.Figure
 
     }
 
+    public class LinePoints2D : Figure
+    {
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2 with linespoints lw {Properties.Width} dt {(int) Properties.DashType} " +
+                   $"ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        #endregion
+    }
+
     public class Scatter3D : Figure
     {
         #region Properties
