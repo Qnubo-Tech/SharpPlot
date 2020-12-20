@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using SharpPlot.Canvas;
+using SharpPlot.Canvas.Figure;
+using SharpPlot.Utils;
 
 namespace SharpPlot
 {
@@ -52,19 +53,43 @@ namespace SharpPlot
     
     public static class Gnuplot
     {
+        #region Attributes
         private static string _gnuplotStr = "gnuplot";
         private static StreamWriter _gnuplotCmd;
         private static Process _gnuplotProcess;
-        private static string _plotInit = Environment.NewLine + "plot";
-
+        
         public static string WinDrive = "F";
         public static string WinBinFolder = @"Program Files\gnuplot\bin";
         public static string LinuxBinFolder = "/usr/local/bin";
         public static string OSXBinFolder = "/usr/local/bin";
         public static Axis Axis;
+        public static Legend Legend;
 
-        private static List<Figure> _figures = new List<Figure>();
+        private static int _figureCounter = 0;
+        private static Dictionary<int, Figure> _figuresDict = new Dictionary<int, Figure>();
         
+        #endregion
+
+        #region Properties
+
+        private static PlotType PlotType { get; set; } = PlotType.Plot;
+
+        private static string PlotInit => _getPlotInit();
+        
+        private static string UnsetColorBoxCommand => $"unset colorbox{Environment.NewLine}";
+        #endregion
+
+        private static int _getNextId()
+        {
+            _figureCounter++;
+            return _figureCounter;
+        }
+
+        private static string _getPlotInit()
+        {
+            return Environment.NewLine + PlotType.ToString().ToLower();
+        }
+
         public static void Start()
         {
             string file = $"{OSXBinFolder}/{_gnuplotStr}";
@@ -97,9 +122,10 @@ namespace SharpPlot
             _gnuplotProcessInit(file);
             
             _gnuplotCmd = _gnuplotProcess.StandardInput;
-            _gnuplotCmd.WriteLine($"unset colorbox{Environment.NewLine}");
+            _gnuplotCmd.WriteLine(UnsetColorBoxCommand);
 
             Axis = new Axis();
+            Legend = new Legend();
         }
         private static void _gnuplotProcessInit(string gnuplotFile)
         {   
@@ -135,27 +161,147 @@ namespace SharpPlot
             }
         }
         
-        
-        
-        //TODO: Check x and y size before figure initialising
-        public static void PlotScatter(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public static Figure GetFigure(int id)
         {
-            _figures.Add(new Scatter(x: x, y: y, title: title));
+            return _figuresDict[id];
         }
 
-        public static void PlotLine2D(IEnumerable<double> x, IEnumerable<double> y, string title)
+        public static void SetPlotType(PlotType plotType)
         {
-            _figures.Add(new Line2D(x: x, y: y, title:  title));
+            PlotType = plotType;
+        }
+
+        public static void SetIsolineDensiy(double density)
+        {
+            WriteCommand($"set isosamples {density}");
+        }
+
+        public static void SetHidden3D()
+        {
+            WriteCommand($"set hidden3d");
+        }
+
+        private static bool _checkCommensurability(IEnumerable<IEnumerable<double>> z)
+        {
+            var lengths = z.Select(e => e.Count()).ToList();
+            var commensurate = lengths.Aggregate(true, (current, t) => (current && (t == lengths.First())));
+            if (!commensurate) {throw new ApplicationException($"[!] Shape: {string.Join(", ", lengths)}");}
+            return true;
         }
         
-        public static void PlotLine2D(DataSet ds, string title)
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y) 
+            where TFigure : Figure, new()
         {
-            _figures.Add(new Line2D(x: ds[AxisName.X], y: ds[AxisName.Y], title:  title));
+            _checkCommensurability(new [] {x, y});
+            var fig = new TFigure {ArrX = x.ToArray(), ArrY = y};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y, IEnumerable<double> z) 
+            where TFigure : Figure, new()
+        {
+            _checkCommensurability(new [] {x, y, z});
+            var fig = new TFigure {ArrX = x, ArrY = y, ArrZ = z};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(string function) 
+            where TFigure : Figure, new()
+        {
+            var fig = new TFigure(){ Properties = {Function = function}};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(DataSet ds) 
+            where TFigure : Figure, new()
+        {
+            _checkCommensurability(new [] {ds[AxisName.X], ds[AxisName.Y]});
+            var fig = new TFigure {ArrX = ds[AxisName.X], ArrY = ds[AxisName.Y]};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y,
+            string title, double size = 1, double width=1.0, DashType dashType=DashType.Solid,
+            Marker marker = Marker.ColoredCircle, Color color = Color.Black)
+            where TFigure : Figure, new()
+        {
+            _checkCommensurability(new [] {x, y});
+            var fig = new TFigure {
+                ArrX = x, 
+                ArrY = y, 
+                Properties =
+                {
+                    Color = color, Marker = marker, 
+                    DashType = dashType, Size = size, 
+                    Title = title, Width = width
+                }
+            };
+
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y, IEnumerable<double> z,
+            string title, double size = 1, double width=1.0, DashType dashType=DashType.Solid,
+            Marker marker = Marker.ColoredCircle, Color color = Color.Black)
+            where TFigure : Figure, new()
+        {
+            _checkCommensurability(new [] {x, y, z});
+            var fig = new TFigure {
+                ArrX = x, 
+                ArrY = y,
+                ArrZ = z,
+                Properties =
+                {
+                    Color = color, Marker = marker, 
+                    DashType = dashType, Size = size, 
+                    Title = title, Width = width
+                }
+            };
+
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+
+        public static (int, TFigure) Plot<TFigure>(DataSet ds,
+            string title, double size = 1, double width = 1.0, DashType dashType = DashType.Solid,
+            Marker marker = Marker.ColoredCircle, Color color = Color.Black)
+            where TFigure : Figure, new()
+        {
+            _checkCommensurability(new[] {ds[AxisName.X], ds[AxisName.Y]});
+            var fig = new TFigure {
+                ArrX = ds[AxisName.X], 
+                ArrY = ds[AxisName.Y], 
+                Properties =
+                {
+                    Color = color, Marker = marker, 
+                    DashType = dashType, Size = size, 
+                    Title = title, Width = width
+                }
+            };
+
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
         }
 
         public static void CleanData()
         {
-           _figures.Clear();
+           _figuresDict.Clear();
+           PlotType = PlotType.Plot;
+           Axis = new Axis();
+           Legend = new Legend();
+           WriteCommand("reset session");
         }
 
 
@@ -172,12 +318,12 @@ namespace SharpPlot
         
         public static void Show()
         {
-            var plotInit = _figures.Aggregate(_plotInit, (current, figure) => current + (figure.HeaderPlot + " ,"));
+            var plotInit = _figuresDict.Aggregate(PlotInit, (current, idFigure) => current + (idFigure.Value.HeaderPlot + " ,"));
 
             plotInit += Environment.NewLine;
             WriteCommand(plotInit);
 
-            foreach (var dataPoint in _figures.SelectMany(figure => figure.DataPoints))
+            foreach (var dataPoint in _figuresDict.SelectMany(idFigure => idFigure.Value.DataPoints))
             {
                 WriteCommand(dataPoint);
             }
