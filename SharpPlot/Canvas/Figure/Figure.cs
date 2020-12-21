@@ -181,8 +181,25 @@ namespace SharpPlot.Canvas.Figure
 
         #endregion
     }
+    
+    public class LinePoints3D : Figure
+    {
+        #region Properties
+        protected internal override PlotType PlotType => PlotType.Splot;
+        #endregion
+        
+        #region Methods
 
-    public class Surface3D : Figure
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with linespoints lw {Properties.Width} dt {(int) Properties.DashType} " +
+                   $"ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        #endregion
+    }
+
+    public class Function : Figure
     {
         #region Properties
 

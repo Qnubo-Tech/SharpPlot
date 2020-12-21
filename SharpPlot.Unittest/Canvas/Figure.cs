@@ -17,12 +17,13 @@ namespace SharpPlot.UnitTest.Canvas
         private Line2D _line2D;
         private LinePoints2D _linePoints2D;
         private Line3D _line3D;
+        private LinePoints3D _linePoints3D;
         private Impulse _impulse;
-        private Surface3D _surface3D;
+        private Function _function;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
         private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
-        private string _function = "x**2+y**2";
+        private string _f = "x**2+y**2";
         
         [SetUp]
         public void SetUp()
@@ -39,10 +40,11 @@ namespace SharpPlot.UnitTest.Canvas
             _line2D = new Line2D();
             _linePoints2D = new LinePoints2D();
             _line3D = new Line3D();
+            _linePoints3D = new LinePoints3D();
             _impulse = new Impulse();
-            _surface3D = new Surface3D()
+            _function = new Function()
             {
-                Properties = {Function = _function}
+                Properties = {Function = _f}
             };
             
         }
@@ -140,7 +142,6 @@ namespace SharpPlot.UnitTest.Canvas
                               $"ps {_linePoints2D.Properties.Size} pt {(int) _linePoints2D.Properties.Marker} " +
                               $"lc rgb '{_linePoints2D.Properties.Color.ToString().ToLower()}'";
             Assert.AreEqual(expectedOps, _linePoints2D.Options);
-            
         }
 
         [Test]
@@ -168,6 +169,15 @@ namespace SharpPlot.UnitTest.Canvas
         }
 
         [Test]
+        public void TestLinePoints3D()
+        {
+            var expectedOps = $"u 1:2:3 with linespoints lw {_linePoints3D.Properties.Width} dt {(int) _linePoints3D.Properties.DashType} " +
+                              $"ps {_linePoints3D.Properties.Size} pt {(int) _linePoints3D.Properties.Marker} " +
+                              $"lc rgb '{_linePoints3D.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _linePoints3D.Options);
+        }
+
+        [Test]
         public void TestImpulse()
         {
             var expectedOps = $"u 1:2 with impulses lw {_impulse.Properties.Width} dt {(int) _impulse.Properties.DashType} " +
@@ -176,14 +186,14 @@ namespace SharpPlot.UnitTest.Canvas
         }
 
         [Test]
-        public void TestSurface()
+        public void TestFunction()
         {
-            Assert.AreEqual(_function, _surface3D.Properties.Function);
-            Assert.AreEqual("", _surface3D.PlotInit);
-            Assert.AreEqual(new List<string>(), _surface3D.DataPoints);
+            Assert.AreEqual(_f, _function.Properties.Function);
+            Assert.AreEqual("", _function.PlotInit);
+            Assert.AreEqual(new List<string>(), _function.DataPoints);
             
-            var expectedOps = $" {_surface3D.Properties.Function} lc rgb '{_surface3D.Properties.Color.ToString().ToLower()}'";
-            Assert.AreEqual(expectedOps, _surface3D.Options);
+            var expectedOps = $" {_function.Properties.Function} lc rgb '{_function.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _function.Options);
         }
         
     }
