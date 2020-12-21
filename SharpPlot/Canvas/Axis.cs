@@ -174,6 +174,9 @@ namespace SharpPlot.Canvas
             _setTicks(ticksValues: ticks, axisTicks: _zTicks);
             _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _zRange);
         }
+        
+        //TODO: Add RemoveXTicks 
+        //set xtics format " "
         #endregion
         
         #region AddTicks

@@ -178,7 +178,12 @@ namespace SharpPlot
 
         public static void SetHidden3D()
         {
-            WriteCommand($"set hidden3d");
+            WriteCommand("set hidden3d");
+        }
+
+        public static void FillSolid()
+        {
+            WriteCommand("set style fill solid");
         }
 
         private static bool _checkCommensurability(IEnumerable<IEnumerable<double>> z)

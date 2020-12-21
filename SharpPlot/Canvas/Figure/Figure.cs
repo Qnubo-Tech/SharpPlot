@@ -225,4 +225,16 @@ namespace SharpPlot.Canvas.Figure
 
         #endregion
     }
+
+    public class Bars : Figure
+    {
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:({Properties.Width}) with boxes lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+        
+        #endregion
+    }
 }

@@ -20,6 +20,7 @@ namespace SharpPlot.UnitTest.Canvas
         private LinePoints3D _linePoints3D;
         private Impulse _impulse;
         private Function _function;
+        private Bars _bars;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
         private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
@@ -46,6 +47,7 @@ namespace SharpPlot.UnitTest.Canvas
             {
                 Properties = {Function = _f}
             };
+            _bars = new Bars();
             
         }
 
@@ -194,6 +196,13 @@ namespace SharpPlot.UnitTest.Canvas
             
             var expectedOps = $" {_function.Properties.Function} lc rgb '{_function.Properties.Color.ToString().ToLower()}'";
             Assert.AreEqual(expectedOps, _function.Options);
+        }
+
+        [Test]
+        public void TestBars()
+        {
+            var expectedOps = $"u 1:2:({_bars.Properties.Width}) with boxes lc rgb '{_bars.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _bars.Options);
         }
         
     }
