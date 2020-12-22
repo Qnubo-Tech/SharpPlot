@@ -78,6 +78,12 @@ namespace SharpPlot.Canvas
             Gnuplot.WriteCommand(ticksCommand);
         }
 
+        private void _removeTicks(AxisTicks axisTicks)
+        {
+            var removeTickscommand = axisTicks.RemoveTicks();
+            Gnuplot.WriteCommand(removeTickscommand);
+        }
+
         private static void _addTicks(Dictionary<String, double> labelValues, AxisTicks axisTicks)
         {
             List<string> commands = axisTicks.AddTicks(labelValues);
@@ -175,8 +181,20 @@ namespace SharpPlot.Canvas
             _setRange(min: ticks.Min(), max: ticks.Max(), axisRange: _zRange);
         }
         
-        //TODO: Add RemoveXTicks 
-        //set xtics format " "
+        public void RemoveXTicks()
+        {
+            _removeTicks(axisTicks: _xTicks);
+        }
+
+        public void RemoveYTicks()
+        {
+            _removeTicks(axisTicks: _yTicks);
+        }
+
+        public void RemoveZTicks()
+        {
+            _removeTicks(axisTicks: _zTicks);
+        }
         #endregion
         
         #region AddTicks
@@ -318,6 +336,13 @@ namespace SharpPlot.Canvas
             return command;
         }
 
+        private string _removeTicks()
+        {
+            string axisName = _axisName.ToString().ToLower();
+            var command = $"set {axisName}tics format ''";
+            return command;
+        }
+
         private List<string> _addTicks(Dictionary<string, double> labelValues)
         {
             string axisName = _axisName.ToString().ToLower();
@@ -342,6 +367,11 @@ namespace SharpPlot.Canvas
                 throw new ArgumentException($"ticksValues cannot be empty");
             }
             return _setTicks(ticksValues: ticksValues);
+        }
+
+        public string RemoveTicks()
+        {
+            return _removeTicks();
         }
 
         public List<string> AddTicks(Dictionary<string, double> labelValues)

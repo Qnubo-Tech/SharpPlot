@@ -111,6 +111,15 @@ namespace SharpPlot.UnitTest.Canvas
         }
 
         [Test]
+        public void TestRemoveTicks()
+        {
+            var actual = _axisTicksCompleteCttr.RemoveTicks();
+            var expected = "set ztics format ''";
+            
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void TestAddTicksOneElement()
         {
             var labelValues = new Dictionary<string, double>()
