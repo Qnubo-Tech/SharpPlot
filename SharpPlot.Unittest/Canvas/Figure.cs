@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics;
+using MathNet.Numerics.Distributions;
 using NUnit.Framework;
 using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
@@ -21,9 +22,11 @@ namespace SharpPlot.UnitTest.Canvas
         private Impulse _impulse;
         private Function _function;
         private Bars _bars;
+        private Histogram _histogram;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
         private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
+        private double[] _array = new double[1000];
         private string _f = "x**2+y**2";
         
         [SetUp]
@@ -48,6 +51,11 @@ namespace SharpPlot.UnitTest.Canvas
                 Properties = {Function = _f}
             };
             _bars = new Bars();
+            Normal.Samples(_array, mean: 0, stddev: 1);
+            _histogram = new Histogram()
+            {
+                ArrX = _array
+            };
             
         }
 
@@ -203,6 +211,21 @@ namespace SharpPlot.UnitTest.Canvas
         {
             var expectedOps = $"u 1:2:({_bars.Properties.Width}) with boxes lc rgb '{_bars.Properties.Color.ToString().ToLower()}'";
             Assert.AreEqual(expectedOps, _bars.Options);
+        }
+
+        [Test]
+        public void TestHistogram()
+        {
+            var expectedOps = $"u 1:({_histogram.Properties.Width}) smooth freq with boxes " +
+                              $"lc rgb '{_histogram.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _histogram.Options);
+
+            var x = _histogram.ArrX;
+            var bins = Math.Min(Math.Ceiling(Math.Sqrt(x.Count())), 100.0);
+            var width = (x.Max() - x.Min()) / bins;
+            var expectedDataPoints = x.Select(e => $"{width * Math.Floor(e / width) + width / 2.0}").ToList();
+            expectedDataPoints.Add("e" + Environment.NewLine);
+            Assert.AreEqual(expectedDataPoints, _histogram.DataPoints);
         }
         
     }
