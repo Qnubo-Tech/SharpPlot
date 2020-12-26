@@ -26,10 +26,16 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     
         #region Constructors
-        protected internal Figure() {}
+
+        protected internal Figure()
+        {
+            _setUp();
+        }
         #endregion
     
         #region Methods
+
+        protected virtual void _setUp() { }
 
         private string _getHeaderPlot()
         {
@@ -207,10 +213,16 @@ namespace SharpPlot.Canvas.Figure
         protected internal override List<string> DataPoints => new List<string>();
 
         #endregion
+
+        #region Methods
+
         protected override string _getOptions()
         {
             return $" {Properties.Function} lc rgb '{Properties.Color.ToString().ToLower()}'";
         }
+
+        #endregion
+
         
     }
 
@@ -238,7 +250,9 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     }
 
-    public class Histogram : Figure
+    public class Figure1D : Figure {}
+
+    public class Histogram : Figure1D
     {
         #region Properties
 
@@ -275,6 +289,38 @@ namespace SharpPlot.Canvas.Figure
             commands.Add("e" + Environment.NewLine);
             
             return commands;
+        }
+
+        #endregion
+    }
+
+    public class Boxplot : Figure1D
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getBoxplotPoints();
+
+        #endregion
+        #region Methods
+
+        protected override void _setUp()
+        {
+            Gnuplot.WriteCommand("set style data boxplot");
+        }
+
+        protected override string _getOptions()
+        {
+            return $"u (0.0):1:({Properties.Width}) pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private List<string> _getBoxplotPoints()
+        {
+            var commands = ArrX.Select(t => $"{t}").ToList();
+
+            commands.Add("e" + Environment.NewLine);
+            
+            return commands;
+            
         }
 
         #endregion

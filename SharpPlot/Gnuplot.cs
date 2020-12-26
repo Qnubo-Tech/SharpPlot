@@ -196,7 +196,7 @@ namespace SharpPlot
         
         
         public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x) 
-            where TFigure : Histogram, new()
+            where TFigure : Figure1D, new()
         {
             var fig = new TFigure {ArrX = x.ToArray()};
             var figId = _getNextId();
