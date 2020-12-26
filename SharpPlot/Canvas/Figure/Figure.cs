@@ -237,4 +237,46 @@ namespace SharpPlot.Canvas.Figure
         
         #endregion
     }
+
+    public class Histogram : Figure
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getHistogramPoints();
+
+        #endregion
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:({Properties.Width}) smooth freq with boxes lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private IEnumerable<double> _preparePoints()
+        {
+            var size = ArrX.Count();
+            var bins = Math.Min(Math.Ceiling(Math.Sqrt(size)), 100.0);
+            var xmax = ArrX.Max();
+            var xmin = ArrX.Min();
+            var width = (xmax - xmin) / bins;
+            var hist = ArrX.Select(e => width * Math.Floor(e / width) + width / 2.0);
+
+            Properties.Width = 0.9 * width;
+
+            return hist;
+        }
+
+        private List<string> _getHistogramPoints()
+        {
+            var x = _preparePoints();
+            
+            var commands = x.Select(t => $"{t}").ToList();
+            
+            commands.Add("e" + Environment.NewLine);
+            
+            return commands;
+        }
+
+        #endregion
+    }
 }

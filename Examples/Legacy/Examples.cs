@@ -4,6 +4,7 @@ using System.Linq;
 using SharpPlot;
 using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
+using MathNet.Numerics.Distributions;
 
 class Program
 {
@@ -71,7 +72,7 @@ class Program
         Gnuplot.Show();
         Gnuplot.Wait();
         
-        // Gnuplo Example Surface with lines
+        // Gnuplot Example Surface with lines
         Gnuplot.CleanData();
         Gnuplot.SetPlotType(PlotType.Splot);
         Gnuplot.SetIsolineDensiy(30);
@@ -85,6 +86,18 @@ class Program
         fig4.SetTitle("x**2+y**2");
         fig5.SetWidth(2.5);
         fig6.SetWidth(2.5);
+        Gnuplot.Show();
+        Gnuplot.Wait();
+        
+        // Gnuplot Example Histogram
+        Gnuplot.CleanData();
+        var size = 10000;
+        var values = new double[size];
+        Normal.Samples(values, 0, 2);
+        var (id, fig) = Gnuplot.Plot<Histogram>(values);
+        fig.SetColor(Color.SteelBlue);
+        fig.SetTitle("Normal distribution");
+        Gnuplot.FillSolid(alpha: 0.4);
         Gnuplot.Show();
         Gnuplot.Wait();
 

@@ -181,9 +181,9 @@ namespace SharpPlot
             WriteCommand("set hidden3d");
         }
 
-        public static void FillSolid()
+        public static void FillSolid(double alpha=1)
         {
-            WriteCommand("set style fill solid");
+            WriteCommand($"set style fill solid {alpha}");
         }
 
         private static bool _checkCommensurability(IEnumerable<IEnumerable<double>> z)
@@ -194,6 +194,15 @@ namespace SharpPlot
             return true;
         }
         
+        
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x) 
+            where TFigure : Histogram, new()
+        {
+            var fig = new TFigure {ArrX = x.ToArray()};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
         public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y) 
             where TFigure : Figure, new()
         {
