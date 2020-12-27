@@ -18,6 +18,7 @@ namespace SharpPlot.UnitTest.Canvas
         private Line2D _line2D;
         private FilledCurves _filledCurves;
         private LinePoints2D _linePoints2D;
+        private YError _yError;
         private Line3D _line3D;
         private LinePoints3D _linePoints3D;
         private Impulse _impulse;
@@ -49,6 +50,10 @@ namespace SharpPlot.UnitTest.Canvas
                 ArrX = _x, ArrY = _y, ArrZ = _z
             };
             _linePoints2D = new LinePoints2D();
+            _yError = new YError()
+            {
+                ArrX = _x, ArrY = _y, ArrZ = _z
+            };
             _line3D = new Line3D();
             _linePoints3D = new LinePoints3D();
             _impulse = new Impulse();
@@ -174,6 +179,18 @@ namespace SharpPlot.UnitTest.Canvas
                               $"ps {_linePoints2D.Properties.Size} pt {(int) _linePoints2D.Properties.Marker} " +
                               $"lc rgb '{_linePoints2D.Properties.Color.ToString().ToLower()}'";
             Assert.AreEqual(expectedOps, _linePoints2D.Options);
+        }
+
+        [Test]
+        public void TestYErr()
+        {
+            var expectedOps = $"u 1:2:3 with yerr ps {_yError.Properties.Size} pt {(int) _yError.Properties.Marker} " +
+                              $"lc rgb '{_yError.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _yError.Options);
+            
+            var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]}").ToList();
+            expectedDataPoints.Add("e" + Environment.NewLine);
+            Assert.AreEqual(expectedDataPoints, _yError.DataPoints);
         }
 
         [Test]

@@ -187,6 +187,34 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     }
 
+    public class YError : Figure
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getDataPoints();
+
+        #endregion
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with yerr ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+        
+        private List<string> _getDataPoints()
+        {
+            var x = ArrX.ToList();
+            var y = ArrY.ToList();
+            var z = ArrZ.ToList();
+            var commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
+            commands.Add("e" + Environment.NewLine);
+
+            return commands;
+        }
+
+        #endregion
+    } 
+
     public class Scatter3D : Figure
     {
         #region Properties
