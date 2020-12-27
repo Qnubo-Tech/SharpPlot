@@ -145,6 +145,35 @@ namespace SharpPlot.Canvas.Figure
 
     }
 
+    public class FilledCurves : Figure
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getDataPoints();
+
+        #endregion
+
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with filledcurve lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private List<string> _getDataPoints()
+        {
+            var x = ArrX.ToList();
+            var y = ArrY.ToList();
+            var z = ArrZ.ToList();
+            var commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
+            commands.Add("e" + Environment.NewLine);
+
+            return commands;
+        }
+
+        #endregion
+    }
+
     public class LinePoints2D : Figure
     {
         #region Methods

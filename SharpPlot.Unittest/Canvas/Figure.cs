@@ -16,6 +16,7 @@ namespace SharpPlot.UnitTest.Canvas
         private Scatter2D _scatter2D;
         private Scatter3D _scatter3D;
         private Line2D _line2D;
+        private FilledCurves _filledCurves;
         private LinePoints2D _linePoints2D;
         private Line3D _line3D;
         private LinePoints3D _linePoints3D;
@@ -23,9 +24,10 @@ namespace SharpPlot.UnitTest.Canvas
         private Function _function;
         private Bars _bars;
         private Histogram _histogram;
+        private Boxplot _boxplot;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
-        private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
+        private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 4).ToList();
         private double[] _array = new double[1000];
         private string _f = "x**2+y**2";
         
@@ -42,6 +44,10 @@ namespace SharpPlot.UnitTest.Canvas
                 ArrX = _x, ArrY = _y, ArrZ = _z
             };
             _line2D = new Line2D();
+            _filledCurves = new FilledCurves()
+            {
+                ArrX = _x, ArrY = _y, ArrZ = _z
+            };
             _linePoints2D = new LinePoints2D();
             _line3D = new Line3D();
             _linePoints3D = new LinePoints3D();
@@ -53,6 +59,10 @@ namespace SharpPlot.UnitTest.Canvas
             _bars = new Bars();
             Normal.Samples(_array, mean: 0, stddev: 1);
             _histogram = new Histogram()
+            {
+                ArrX = _array
+            };
+            _boxplot = new Boxplot()
             {
                 ArrX = _array
             };
@@ -146,6 +156,18 @@ namespace SharpPlot.UnitTest.Canvas
         }
 
         [Test]
+        public void TestFilledCurves()
+        {
+            var expectedOps = $"u 1:2:3 with filledcurve lw {_filledCurves.Properties.Width} " +
+                              $"dt {(int) _filledCurves.Properties.DashType} lc rgb '{_filledCurves.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _filledCurves.Options);
+            
+            var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]}").ToList();
+            expectedDataPoints.Add("e" + Environment.NewLine);
+            Assert.AreEqual(expectedDataPoints, _filledCurves.DataPoints);
+        }
+
+        [Test]
         public void TestLinePoints2D()
         {
             var expectedOps = $"u 1:2 with linespoints lw {_linePoints2D.Properties.Width} dt {(int) _linePoints2D.Properties.DashType} " +
@@ -226,6 +248,18 @@ namespace SharpPlot.UnitTest.Canvas
             var expectedDataPoints = x.Select(e => $"{width * Math.Floor(e / width) + width / 2.0}").ToList();
             expectedDataPoints.Add("e" + Environment.NewLine);
             Assert.AreEqual(expectedDataPoints, _histogram.DataPoints);
+        }
+
+        [Test]
+        public void TestBoxplot()
+        {
+            var expectedOps = $"u (0.0):1:({_boxplot.Properties.Width}) pt {(int) _boxplot.Properties.Marker} " +
+                             $"lc rgb '{_boxplot.Properties.Color.ToString().ToLower()}'";
+            Assert.AreEqual(expectedOps, _boxplot.Options);
+            
+            var expectedDataPoints = _histogram.ArrX.Select(t => $"{t}").ToList();
+            expectedDataPoints.Add("e" + Environment.NewLine);
+            Assert.AreEqual(expectedDataPoints, _boxplot.DataPoints);
         }
         
     }
