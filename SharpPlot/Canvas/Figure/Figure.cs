@@ -12,7 +12,8 @@ namespace SharpPlot.Canvas.Figure
         #region Attributes
         protected internal IEnumerable<double> ArrX;
         protected internal IEnumerable<double> ArrY;
-        protected internal IEnumerable<double> ArrZ;
+        protected internal IEnumerable<double> ArrZ1;
+        protected internal IEnumerable<double> ArrZ2;
         #endregion
     
         #region Properties
@@ -63,7 +64,7 @@ namespace SharpPlot.Canvas.Figure
                     break;
                 
                 case PlotType.Splot:
-                    var z = ArrZ.ToList();
+                    var z = ArrZ1.ToList();
                     commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
                     break;
             }
@@ -164,7 +165,7 @@ namespace SharpPlot.Canvas.Figure
         {
             var x = ArrX.ToList();
             var y = ArrY.ToList();
-            var z = ArrZ.ToList();
+            var z = ArrZ1.ToList();
             var commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
             commands.Add("e" + Environment.NewLine);
 
@@ -205,7 +206,7 @@ namespace SharpPlot.Canvas.Figure
         {
             var x = ArrX.ToList();
             var y = ArrY.ToList();
-            var z = ArrZ.ToList();
+            var z = ArrZ1.ToList();
             var commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
             commands.Add("e" + Environment.NewLine);
 
@@ -378,6 +379,36 @@ namespace SharpPlot.Canvas.Figure
             
             return commands;
             
+        }
+
+        #endregion
+    }
+
+    public class Vector : Figure
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getVectorPoints();
+
+        #endregion
+        
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3:4 with vector lw {Properties.Width} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private List<string> _getVectorPoints()
+        {
+            var y = ArrY.ToList();
+            var z1 = ArrZ1.ToList();
+            var z2 = ArrZ2.ToList();
+            var commands = ArrX.Select((t, idx) => $"{t} {y[idx]} {z1[idx]} {z2[idx]}").ToList();
+
+            commands.Add("e" + Environment.NewLine);
+            
+            return commands;
         }
 
         #endregion

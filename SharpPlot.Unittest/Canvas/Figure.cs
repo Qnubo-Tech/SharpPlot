@@ -26,6 +26,7 @@ namespace SharpPlot.UnitTest.Canvas
         private Bars _bars;
         private Histogram _histogram;
         private Boxplot _boxplot;
+        private Vector _vector;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
         private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 4).ToList();
@@ -42,17 +43,17 @@ namespace SharpPlot.UnitTest.Canvas
             _scatter2D = new Scatter2D();
             _scatter3D = new Scatter3D()
             {
-                ArrX = _x, ArrY = _y, ArrZ = _z
+                ArrX = _x, ArrY = _y, ArrZ1 = _z
             };
             _line2D = new Line2D();
             _filledCurves = new FilledCurves()
             {
-                ArrX = _x, ArrY = _y, ArrZ = _z
+                ArrX = _x, ArrY = _y, ArrZ1 = _z
             };
             _linePoints2D = new LinePoints2D();
             _yError = new YError()
             {
-                ArrX = _x, ArrY = _y, ArrZ = _z
+                ArrX = _x, ArrY = _y, ArrZ1 = _z
             };
             _line3D = new Line3D();
             _linePoints3D = new LinePoints3D();
@@ -70,6 +71,10 @@ namespace SharpPlot.UnitTest.Canvas
             _boxplot = new Boxplot()
             {
                 ArrX = _array
+            };
+            _vector = new Vector()
+            {
+                ArrX = _x, ArrY = _y, ArrZ1 = _z, ArrZ2 = _z
             };
             
         }
@@ -277,6 +282,19 @@ namespace SharpPlot.UnitTest.Canvas
             var expectedDataPoints = _histogram.ArrX.Select(t => $"{t}").ToList();
             expectedDataPoints.Add("e" + Environment.NewLine);
             Assert.AreEqual(expectedDataPoints, _boxplot.DataPoints);
+        }
+
+        [Test]
+        public void TestVector()
+        {
+            var expectedOps = $"u 1:2:3:4 with vector lw {_vector.Properties.Width} " +
+                              $"lc rgb '{_vector.Properties.Color.ToString().ToLower()}'";
+            
+            Assert.AreEqual(expectedOps, _vector.Options);
+            
+            var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]} {_z[idx]}").ToList();
+            expectedDataPoints.Add("e" + Environment.NewLine);
+            Assert.AreEqual(expectedDataPoints, _vector.DataPoints);
         }
         
     }
