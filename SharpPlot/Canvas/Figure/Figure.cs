@@ -40,7 +40,7 @@ namespace SharpPlot.Canvas.Figure
 
         private string _getHeaderPlot()
         {
-            return PlotInit + Options + $" title '{Properties.Title}' ";
+            return PlotInit + Options + Properties.OptTitle;
         }
 
         protected virtual string _getOptions()
@@ -129,7 +129,7 @@ namespace SharpPlot.Canvas.Figure
         #region Methods
         protected override string _getOptions()
         {
-            return $"u 1:2 with points ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2 with points {Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
         #endregion
 
@@ -140,7 +140,7 @@ namespace SharpPlot.Canvas.Figure
         #region Methods
         protected override string _getOptions()
         {
-            return $"u 1:2 with lines lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2 with lines {Properties.OptWidth} {Properties.OptDashType} {Properties.OptColor}";
         }
         #endregion
 
@@ -158,7 +158,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2:3 with filledcurve lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2:3 with filledcurve {Properties.OptWidth} {Properties.OptDashType} {Properties.OptColor}";
         }
 
         private List<string> _getDataPoints()
@@ -181,8 +181,8 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2 with linespoints lw {Properties.Width} dt {(int) Properties.DashType} " +
-                   $"ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2 with linespoints {Properties.OptWidth} {Properties.OptDashType} " +
+                   $"{Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
 
         #endregion
@@ -199,7 +199,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2:3 with yerr ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2:3 with yerr {Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
         
         private List<string> _getDataPoints()
@@ -225,7 +225,7 @@ namespace SharpPlot.Canvas.Figure
         #region Methods
         protected override string _getOptions()
         {
-            return $"u 1:2:3 with points ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2:3 with points {Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
         #endregion
     }
@@ -240,7 +240,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2:3 with lines lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2:3 with lines {Properties.OptWidth} {Properties.OptDashType} {Properties.OptColor}";
         }
 
         #endregion
@@ -256,8 +256,8 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2:3 with linespoints lw {Properties.Width} dt {(int) Properties.DashType} " +
-                   $"ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2:3 with linespoints {Properties.OptWidth} {Properties.OptDashType} " +
+                   $"{Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
 
         #endregion
@@ -276,7 +276,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $" {Properties.Function} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $" {Properties.Function} {Properties.OptColor}";
         }
 
         #endregion
@@ -290,7 +290,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2 with impulses lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2 with impulses {Properties.OptWidth} {Properties.OptDashType} {Properties.OptColor}";
         }
 
         #endregion
@@ -302,7 +302,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2:({Properties.Width}) with boxes lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2:({Properties.Width}) with boxes {Properties.OptColor}";
         }
         
         #endregion
@@ -321,7 +321,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:({Properties.Width}) smooth freq with boxes lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:({Properties.Width}) smooth freq with boxes {Properties.OptColor}";
         }
 
         private IEnumerable<double> _preparePoints()
@@ -368,7 +368,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u (0.0):1:({Properties.Width}) pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u (0.0):1:({Properties.Width}) {Properties.OptMarker} {Properties.OptColor}";
         }
 
         private List<string> _getBoxplotPoints()
@@ -396,7 +396,7 @@ namespace SharpPlot.Canvas.Figure
 
         protected override string _getOptions()
         {
-            return $"u 1:2:3:4 with vector lw {Properties.Width} lc rgb '{Properties.Color.ToString().ToLower()}'";
+            return $"u 1:2:3:4 with vector {Properties.OptWidth} {Properties.OptColor}";
         }
 
         private List<string> _getVectorPoints()
