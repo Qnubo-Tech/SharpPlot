@@ -12,7 +12,8 @@ namespace SharpPlot.Canvas.Figure
         #region Attributes
         protected internal IEnumerable<double> ArrX;
         protected internal IEnumerable<double> ArrY;
-        protected internal IEnumerable<double> ArrZ;
+        protected internal IEnumerable<double> ArrZ1;
+        protected internal IEnumerable<double> ArrZ2;
         #endregion
     
         #region Properties
@@ -26,10 +27,16 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     
         #region Constructors
-        protected internal Figure() {}
+
+        protected internal Figure()
+        {
+            _setUp();
+        }
         #endregion
     
         #region Methods
+
+        protected virtual void _setUp() { }
 
         private string _getHeaderPlot()
         {
@@ -57,7 +64,7 @@ namespace SharpPlot.Canvas.Figure
                     break;
                 
                 case PlotType.Splot:
-                    var z = ArrZ.ToList();
+                    var z = ArrZ1.ToList();
                     commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
                     break;
             }
@@ -139,6 +146,76 @@ namespace SharpPlot.Canvas.Figure
 
     }
 
+    public class FilledCurves : Figure
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getDataPoints();
+
+        #endregion
+
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with filledcurve lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private List<string> _getDataPoints()
+        {
+            var x = ArrX.ToList();
+            var y = ArrY.ToList();
+            var z = ArrZ1.ToList();
+            var commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
+            commands.Add("e" + Environment.NewLine);
+
+            return commands;
+        }
+
+        #endregion
+    }
+
+    public class LinePoints2D : Figure
+    {
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2 with linespoints lw {Properties.Width} dt {(int) Properties.DashType} " +
+                   $"ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        #endregion
+    }
+
+    public class YError : Figure
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getDataPoints();
+
+        #endregion
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with yerr ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+        
+        private List<string> _getDataPoints()
+        {
+            var x = ArrX.ToList();
+            var y = ArrY.ToList();
+            var z = ArrZ1.ToList();
+            var commands = x.Select((t, idx) => $"{t} {y[idx]} {z[idx]}").ToList();
+            commands.Add("e" + Environment.NewLine);
+
+            return commands;
+        }
+
+        #endregion
+    } 
+
     public class Scatter3D : Figure
     {
         #region Properties
@@ -168,8 +245,25 @@ namespace SharpPlot.Canvas.Figure
 
         #endregion
     }
+    
+    public class LinePoints3D : Figure
+    {
+        #region Properties
+        protected internal override PlotType PlotType => PlotType.Splot;
+        #endregion
+        
+        #region Methods
 
-    public class Surface3D : Figure
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3 with linespoints lw {Properties.Width} dt {(int) Properties.DashType} " +
+                   $"ps {Properties.Size} pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        #endregion
+    }
+
+    public class Function : Figure
     {
         #region Properties
 
@@ -177,10 +271,16 @@ namespace SharpPlot.Canvas.Figure
         protected internal override List<string> DataPoints => new List<string>();
 
         #endregion
+
+        #region Methods
+
         protected override string _getOptions()
         {
             return $" {Properties.Function} lc rgb '{Properties.Color.ToString().ToLower()}'";
         }
+
+        #endregion
+
         
     }
 
@@ -191,6 +291,124 @@ namespace SharpPlot.Canvas.Figure
         protected override string _getOptions()
         {
             return $"u 1:2 with impulses lw {Properties.Width} dt {(int) Properties.DashType} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        #endregion
+    }
+
+    public class Bars : Figure
+    {
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:({Properties.Width}) with boxes lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+        
+        #endregion
+    }
+
+    public class Figure1D : Figure {}
+
+    public class Histogram : Figure1D
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getHistogramPoints();
+
+        #endregion
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:({Properties.Width}) smooth freq with boxes lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private IEnumerable<double> _preparePoints()
+        {
+            var size = ArrX.Count();
+            var bins = Math.Min(Math.Ceiling(Math.Sqrt(size)), 100.0);
+            var xmax = ArrX.Max();
+            var xmin = ArrX.Min();
+            var width = (xmax - xmin) / bins;
+            var hist = ArrX.Select(e => width * Math.Floor(e / width) + width / 2.0);
+
+            Properties.Width = 0.9 * width;
+
+            return hist;
+        }
+
+        private List<string> _getHistogramPoints()
+        {
+            var x = _preparePoints();
+            
+            var commands = x.Select(t => $"{t}").ToList();
+            
+            commands.Add("e" + Environment.NewLine);
+            
+            return commands;
+        }
+
+        #endregion
+    }
+
+    public class Boxplot : Figure1D
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getBoxplotPoints();
+
+        #endregion
+        #region Methods
+
+        protected override void _setUp()
+        {
+            Gnuplot.WriteCommand("set style data boxplot");
+        }
+
+        protected override string _getOptions()
+        {
+            return $"u (0.0):1:({Properties.Width}) pt {(int) Properties.Marker} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private List<string> _getBoxplotPoints()
+        {
+            var commands = ArrX.Select(t => $"{t}").ToList();
+
+            commands.Add("e" + Environment.NewLine);
+            
+            return commands;
+            
+        }
+
+        #endregion
+    }
+
+    public class Vector : Figure
+    {
+        #region Properties
+
+        protected internal override List<string> DataPoints => _getVectorPoints();
+
+        #endregion
+        
+        #region Methods
+
+        protected override string _getOptions()
+        {
+            return $"u 1:2:3:4 with vector lw {Properties.Width} lc rgb '{Properties.Color.ToString().ToLower()}'";
+        }
+
+        private List<string> _getVectorPoints()
+        {
+            var y = ArrY.ToList();
+            var z1 = ArrZ1.ToList();
+            var z2 = ArrZ2.ToList();
+            var commands = ArrX.Select((t, idx) => $"{t} {y[idx]} {z1[idx]} {z2[idx]}").ToList();
+
+            commands.Add("e" + Environment.NewLine);
+            
+            return commands;
         }
 
         #endregion

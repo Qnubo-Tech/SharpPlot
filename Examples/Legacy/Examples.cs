@@ -4,6 +4,7 @@ using System.Linq;
 using SharpPlot;
 using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
+using MathNet.Numerics.Distributions;
 
 class Program
 {
@@ -71,7 +72,7 @@ class Program
         Gnuplot.Show();
         Gnuplot.Wait();
         
-        // Gnuplo Example Surface with lines
+        // Gnuplot Example Surface with lines
         Gnuplot.CleanData();
         Gnuplot.SetPlotType(PlotType.Splot);
         Gnuplot.SetIsolineDensiy(30);
@@ -86,6 +87,39 @@ class Program
         fig5.SetWidth(2.5);
         fig6.SetWidth(2.5);
         Gnuplot.Show();
+        Gnuplot.Wait();
+        
+        // Gnuplot Example Histogram
+        Gnuplot.CleanData();
+        var size = 10000;
+        var values = new double[size];
+        Normal.Samples(values, 0, 2);
+        var (id7, fig7) = Gnuplot.Plot<Histogram>(values);
+        fig7.SetColor(Color.SteelBlue);
+        fig7.SetTitle("Normal distribution");
+        Gnuplot.FillSolid(alpha: 0.4);
+        Gnuplot.Show();
+        Gnuplot.Wait();
+        
+        // Gnuplot Example Vector
+        Gnuplot.CleanData();
+        var px = new List<double>();
+        var py = new List<double>();
+        var xForce = new List<double>();
+        var yForce = new List<double>();
+        var _x = Generate.LinearSpaced(20, -Math.PI,  Math.PI).ToList();
+        foreach (var xPoint in _x)
+        {
+            foreach (var yPoint in _x)
+            {
+                px.Add(xPoint);
+                py.Add(yPoint);
+                xForce.Add(0.3* xPoint / Math.Sqrt(Math.Pow(xPoint, 2) + Math.Pow(yPoint, 2) + 4));
+                yForce.Add(-0.3* yPoint / Math.Sqrt(Math.Pow(xPoint, 2) + Math.Pow(yPoint, 2) + 4));
+            }
+        }
+        var (id8, fig8) = Gnuplot.Plot<Vector>(px, py, xForce, yForce);
+        Gnuplot.Show(); 
         Gnuplot.Wait();
 
         // Gnuplot Example 2:

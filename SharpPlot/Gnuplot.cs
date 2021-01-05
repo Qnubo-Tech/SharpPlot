@@ -178,7 +178,12 @@ namespace SharpPlot
 
         public static void SetHidden3D()
         {
-            WriteCommand($"set hidden3d");
+            WriteCommand("set hidden3d");
+        }
+
+        public static void FillSolid(double alpha=1)
+        {
+            WriteCommand($"set style fill solid {alpha}");
         }
 
         private static bool _checkCommensurability(IEnumerable<IEnumerable<double>> z)
@@ -189,6 +194,15 @@ namespace SharpPlot
             return true;
         }
         
+        
+        public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x) 
+            where TFigure : Figure1D, new()
+        {
+            var fig = new TFigure {ArrX = x.ToArray()};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
         public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y) 
             where TFigure : Figure, new()
         {
@@ -203,7 +217,18 @@ namespace SharpPlot
             where TFigure : Figure, new()
         {
             _checkCommensurability(new [] {x, y, z});
-            var fig = new TFigure {ArrX = x, ArrY = y, ArrZ = z};
+            var fig = new TFigure {ArrX = x, ArrY = y, ArrZ1 = z};
+            var figId = _getNextId();
+            _figuresDict.Add(figId, fig);
+            return (figId, fig);
+        }
+        
+        public static (int, TFigure) Plot<TFigure>(
+            IEnumerable<double> x, IEnumerable<double> y, IEnumerable<double> z1, IEnumerable<double> z2) 
+            where TFigure : Figure, new()
+        {
+            _checkCommensurability(new [] {x, y, z1, z2});
+            var fig = new TFigure {ArrX = x, ArrY = y, ArrZ1 = z1, ArrZ2 = z2};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
             return (figId, fig);
@@ -259,7 +284,7 @@ namespace SharpPlot
             var fig = new TFigure {
                 ArrX = x, 
                 ArrY = y,
-                ArrZ = z,
+                ArrZ1 = z,
                 Properties =
                 {
                     Color = color, Marker = marker, 
