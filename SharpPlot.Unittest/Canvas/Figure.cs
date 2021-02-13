@@ -4,6 +4,7 @@ using System.Linq;
 using MathNet.Numerics;
 using MathNet.Numerics.Distributions;
 using NUnit.Framework;
+using SharpPlot.Canvas;
 using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
 
@@ -38,22 +39,22 @@ namespace SharpPlot.UnitTest.Canvas
         {
             _figure = new Figure()
             {
-                ArrX = _x, ArrY = _y
+                Data = new DataPoints(x: _x, y: _y) 
             };
             _scatter2D = new Scatter2D();
             _scatter3D = new Scatter3D()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
             _line2D = new Line2D();
             _filledCurves = new FilledCurves()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
             _linePoints2D = new LinePoints2D();
             _yError = new YError()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
             _line3D = new Line3D();
             _linePoints3D = new LinePoints3D();
@@ -66,15 +67,15 @@ namespace SharpPlot.UnitTest.Canvas
             Normal.Samples(_array, mean: 0, stddev: 1);
             _histogram = new Histogram()
             {
-                ArrX = _array
+                Data = new DataPoints(x: _array) 
             };
             _boxplot = new Boxplot()
             {
-                ArrX = _array
+                Data = new DataPoints(x: _array)
             };
             _vector = new Vector()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z, ArrZ2 = _z
+                Data = new DataPoints(x1: _x, x2: _y, y1: _z, y2: _z) 
             };
             
         }
@@ -264,7 +265,7 @@ namespace SharpPlot.UnitTest.Canvas
                               $"{_histogram.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _histogram.Options);
 
-            var x = _histogram.ArrX;
+            var x = _histogram.Data.Array[0];
             var bins = Math.Min(Math.Ceiling(Math.Sqrt(x.Count())), 100.0);
             var width = (x.Max() - x.Min()) / bins;
             var expectedDataPoints = x.Select(e => $"{width * Math.Floor(e / width) + width / 2.0}").ToList();
@@ -279,7 +280,7 @@ namespace SharpPlot.UnitTest.Canvas
                              $"{_boxplot.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _boxplot.Options);
             
-            var expectedDataPoints = _histogram.ArrX.Select(t => $"{t}").ToList();
+            var expectedDataPoints = _histogram.Data.Array[0].Select(t => $"{t}").ToList();
             expectedDataPoints.Add("e" + Environment.NewLine);
             Assert.AreEqual(expectedDataPoints, _boxplot.DataPoints);
         }
