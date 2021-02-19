@@ -15,8 +15,10 @@ namespace SharpPlot.UnitTest.Canvas
         private DataPoints _dataPoints3D;
         private DataPoints _dataPoints4D;
         private List<double> _x = Generate.LinearSpaced(10, 0, 10).ToList();
+        private List<double> _xWrongSize = Generate.LinearSpaced(20, 0, 10).ToList();
         private List<double> _y = Generate.LinearSpaced(10, 0, 10).Select(e => e * 2).ToList();
         private List<double> _z = Generate.LinearSpaced(10, 0, 10).Select(e => e * 4).ToList();
+        
 
         [SetUp]
         public void SetUp()
@@ -108,6 +110,12 @@ namespace SharpPlot.UnitTest.Canvas
             expectedStream = _x.Select((e, idx) => $"{e} {_y[idx]} {_z[idx]} {_z[idx]}").ToList();
             expectedStream.Add("e" + Environment.NewLine);
             Assert.AreEqual(expectedStream, _dataPoints4D.StreamPoints());
+        }
+
+        [Test]
+        public void TestCheckCommensurability()
+        {
+            Assert.Throws<ApplicationException>(() => new DataPoints(x: _x, y: _xWrongSize));
         }
 
 
