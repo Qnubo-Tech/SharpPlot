@@ -38,8 +38,8 @@ namespace GettingStarted
             Gnuplot.Start();
             var x = Enumerable.Range(-100, 201).Select(z=>z*0.025*Math.PI).ToArray();
             var sinX = x.Select(Math.Sin).ToArray();
-            var dataSet = new DataSet(x, sinX);
-            var (id, fig) = Gnuplot.Plot<Line2D>(dataSet, "First Example: sin(x)");
+            var data = new DataPoints(x, sinX);
+            var (id, fig) = Gnuplot.Plot<Line>(data, "First Example: sin(x)");
             Gnuplot.Show();
             Gnuplot.Wait();
         }
@@ -52,7 +52,7 @@ There are several things to understand from this example:
 * We need to import the library with: `using SharpPlot`
 * The initialisation of the `gnuplot` interpreter happens with `Gnuplot.Start()`. This is the default constructor of `SharpPlot.Gnuplot`.
 * In case `SharpPlot.Gnuplot` is not able to initialise or gives any error, try the `explicit` constructor `Gnuplot("{gnuplot/Bin/Path}")`, which allows you to specify where the executable of gnuplot is located at in your computer.
-* `DataSet` is a collection of data, which must be commensurate, i.e. the length of `x` must be equal to the length of `sinX`
-* To represent the data with a line, we use `PlotLine2D`, which accepts the legend of this `DataSet` as second argument.
+* `DataPoints` is a collection of data, which must be commensurate, i.e. the length of `x` must be equal to the length of `sinX`
+* To represent the data with a line, we use `Plot<Line>`, which accepts the legend of this `DataPoints` as second argument.
 
 And this is all for the time being. Congratulations, and see you in the next Example &#128079;
