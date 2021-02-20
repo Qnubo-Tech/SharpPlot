@@ -14,14 +14,14 @@ namespace SharpPlot.UnitTest.Canvas
     public class TestFigure
     {
         private Figure _figure;
-        private Scatter2D _scatter2D;
-        private Scatter3D _scatter3D;
-        private Line2D _line2D;
+        private Scatter _scatter2D;
+        private Scatter _scatter3D;
+        private Line _line2D;
         private FilledCurves _filledCurves;
-        private LinePoints2D _linePoints2D;
+        private LinePoints _linePoints2D;
         private YError _yError;
-        private Line3D _line3D;
-        private LinePoints3D _linePoints3D;
+        private Line _line3D;
+        private LinePoints _linePoints3D;
         private Impulse _impulse;
         private Function _function;
         private Bars _bars;
@@ -41,23 +41,38 @@ namespace SharpPlot.UnitTest.Canvas
             {
                 Data = new DataPoints(x: _x, y: _y) 
             };
-            _scatter2D = new Scatter2D();
-            _scatter3D = new Scatter3D()
+            _scatter2D = new Scatter()
+            {
+                Data = new DataPoints(x: _x, y: _y)
+            };
+            _scatter3D = new Scatter()
             {
                 Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
-            _line2D = new Line2D();
+            _line2D = new Line()
+            {
+                Data = new DataPoints(x: _x, y: _y)
+            };
             _filledCurves = new FilledCurves()
             {
                 Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
-            _linePoints2D = new LinePoints2D();
+            _linePoints2D = new LinePoints()
+            {
+                Data = new DataPoints(x: _x, y: _y)
+            };
             _yError = new YError()
             {
                 Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
-            _line3D = new Line3D();
-            _linePoints3D = new LinePoints3D();
+            _line3D = new Line()
+            {
+                Data = new DataPoints(x: _x, y: _y, z: _z)
+            };
+            _linePoints3D = new LinePoints()
+            {
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
+            };
             _impulse = new Impulse();
             _function = new Function()
             {
@@ -153,16 +168,16 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestScatter2D()
         {
-            var expectedOps = $"u 1:2 {Shape.Points} {_scatter2D.Properties.OptSize} {_scatter2D.Properties.OptMarker} " +
-                              $"{_scatter2D.Properties.OptColor}";
+            var expectedOps = $"u {_scatter2D.Data.OptDim} {Shape.Points} {_scatter2D.Properties.OptSize} " +
+                              $"{_scatter2D.Properties.OptMarker} {_scatter2D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _scatter2D.Options);
         }
 
         [Test]
         public void TestLine2D()
         {
-            var expectedOps = $"u 1:2 {Shape.Lines} {_line2D.Properties.OptWidth} {_line2D.Properties.OptDashType} " +
-                              $"{_line2D.Properties.OptColor}";
+            var expectedOps = $"u {_line2D.Data.OptDim} {Shape.Lines} {_line2D.Properties.OptWidth} " +
+                              $"{_line2D.Properties.OptDashType} {_line2D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _line2D.Options);
         }
 
@@ -181,9 +196,9 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestLinePoints2D()
         {
-            var expectedOps = $"u 1:2 {Shape.LinesPoints} {_linePoints2D.Properties.OptWidth} {_linePoints2D.Properties.OptDashType} " +
-                              $"{_linePoints2D.Properties.OptSize} {_linePoints2D.Properties.OptMarker} " +
-                              $"{_linePoints2D.Properties.OptColor}";
+            var expectedOps = $"u {_linePoints2D.Data.OptDim} {Shape.LinesPoints} {_linePoints2D.Properties.OptWidth} " +
+                              $"{_linePoints2D.Properties.OptDashType} {_linePoints2D.Properties.OptSize} " +
+                              $"{_linePoints2D.Properties.OptMarker} {_linePoints2D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _linePoints2D.Options);
         }
 
@@ -202,10 +217,8 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestScatter3D()
         {
-            Assert.AreEqual(PlotType.Splot, _scatter3D.PlotType);
-            
-            var expectedOps = $"u 1:2:3 {Shape.Points} {_scatter3D.Properties.OptSize} {_scatter3D.Properties.OptMarker} " +
-                              $"{_scatter3D.Properties.OptColor}";
+            var expectedOps = $"u {_scatter3D.Data.OptDim} {Shape.Points} {_scatter3D.Properties.OptSize} " +
+                              $"{_scatter3D.Properties.OptMarker} {_scatter3D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _scatter3D.Options);
             
             var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]}").ToList();
@@ -216,17 +229,15 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestLine3D()
         {
-            Assert.AreEqual(PlotType.Splot, _line3D.PlotType);
-            
-            var expectedOps = $"u 1:2:3 {Shape.Lines} {_line3D.Properties.OptWidth} {_line3D.Properties.OptDashType} " +
-                              $"{_line3D.Properties.OptColor}";
+            var expectedOps = $"u {_line3D.Data.OptDim} {Shape.Lines} {_line3D.Properties.OptWidth} " +
+                              $"{_line3D.Properties.OptDashType} {_line3D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _line3D.Options);
         }
 
         [Test]
         public void TestLinePoints3D()
         {
-            var expectedOps = $"u 1:2:3 {Shape.LinesPoints} {_linePoints3D.Properties.OptWidth} {_linePoints3D.Properties.OptDashType} " +
+            var expectedOps = $"u {_line3D.Data.OptDim} {Shape.LinesPoints} {_linePoints3D.Properties.OptWidth} {_linePoints3D.Properties.OptDashType} " +
                               $"{_linePoints3D.Properties.OptSize} {_linePoints3D.Properties.OptMarker} " +
                               $"{_linePoints3D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _linePoints3D.Options);

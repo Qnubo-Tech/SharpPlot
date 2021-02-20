@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics;
 using NUnit.Framework;
-using SharpPlot.Canvas;
+using SharpPlot.Canvas.Figure;
 
 namespace SharpPlot.UnitTest.Canvas
 {
@@ -74,6 +74,15 @@ namespace SharpPlot.UnitTest.Canvas
             Assert.AreEqual(2, _dataPoints2D.Dim);
             Assert.AreEqual(3, _dataPoints3D.Dim);
             Assert.AreEqual(4, _dataPoints4D.Dim);
+        }
+        
+        [Test]
+        public void TestOptDimProperty()
+        {
+            Assert.AreEqual("1", _dataPoints1D.OptDim);
+            Assert.AreEqual("1:2", _dataPoints2D.OptDim);
+            Assert.AreEqual("1:2:3", _dataPoints3D.OptDim);
+            Assert.AreEqual("1:2:3:4", _dataPoints4D.OptDim);
         }
 
         [Test]

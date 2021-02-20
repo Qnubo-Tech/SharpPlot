@@ -2,12 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpPlot.Canvas
+namespace SharpPlot.Canvas.Figure
 {
     public class DataPoints
     {
         protected internal double[][] Array;
+
+        #region Properties
         public int Dim => Array.Length;
+        public string OptDim => _getOptDim();
+        #endregion
+
 
         #region Constructors
         public DataPoints(IEnumerable<double> x)
@@ -51,6 +56,17 @@ namespace SharpPlot.Canvas
             var lengths = Array.Select(e => e.Length).ToList();
             var commensurate = lengths.Aggregate(true, (current, t) => (current && (t == lengths.First())));
             if (!commensurate) {throw new ApplicationException($"[!] Shape: {string.Join(", ", lengths)}");}
+        }
+
+        private string _getOptDim()
+        {
+            var optDim = "1";
+            foreach (var dim in Enumerable.Range(2, Dim-1))
+            {
+                optDim += $":{dim}";
+            }
+
+            return optDim;
         }
 
         internal List<string> StreamPoints()

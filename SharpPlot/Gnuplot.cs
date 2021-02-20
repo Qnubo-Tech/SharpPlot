@@ -186,15 +186,7 @@ namespace SharpPlot
             WriteCommand($"set style fill solid {alpha}");
         }
 
-        private static bool _checkCommensurability(IEnumerable<IEnumerable<double>> z)
-        {
-            var lengths = z.Select(e => e.Count()).ToList();
-            var commensurate = lengths.Aggregate(true, (current, t) => (current && (t == lengths.First())));
-            if (!commensurate) {throw new ApplicationException($"[!] Shape: {string.Join(", ", lengths)}");}
-            return true;
-        }
-        
-        
+
         public static (int, TFigure) Plot<TFigure>(DataPoints dp)
             where TFigure : Figure, new()  
         {
@@ -234,7 +226,6 @@ namespace SharpPlot
         public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y) 
             where TFigure : Figure, new()
         {
-            _checkCommensurability(new [] {x, y});
             var fig = new TFigure { Data = new DataPoints(x: x, y: y) };
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
@@ -244,7 +235,6 @@ namespace SharpPlot
         public static (int, TFigure) Plot<TFigure>(IEnumerable<double> x, IEnumerable<double> y, IEnumerable<double> z) 
             where TFigure : Figure, new()
         {
-            _checkCommensurability(new [] {x, y, z});
             var fig = new TFigure { Data = new DataPoints(x: x, y: y, z: z)};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
@@ -255,7 +245,6 @@ namespace SharpPlot
             IEnumerable<double> x1, IEnumerable<double> x2, IEnumerable<double> y1, IEnumerable<double> y2) 
             where TFigure : Figure, new()
         {
-            _checkCommensurability(new [] {x1, x2, y1, y2});
             var fig = new TFigure { Data = new DataPoints(x1: x1, x2: x2, y1: y1, y2: y2)};
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
@@ -274,7 +263,6 @@ namespace SharpPlot
         public static (int, TFigure) Plot<TFigure>(DataSet ds) 
             where TFigure : Figure, new()
         {
-            _checkCommensurability(new [] {ds[AxisName.X], ds[AxisName.Y]});
             var fig = new TFigure { Data = new DataPoints(x: ds[AxisName.X], ds[AxisName.Y]) };
             var figId = _getNextId();
             _figuresDict.Add(figId, fig);
@@ -286,7 +274,6 @@ namespace SharpPlot
             Marker marker = Marker.ColoredCircle, Color color = Color.Black)
             where TFigure : Figure, new()
         {
-            _checkCommensurability(new [] {x, y});
             var fig = new TFigure {
                 Data = new DataPoints(x: x, y: y),
                 Properties =
@@ -307,7 +294,6 @@ namespace SharpPlot
             Marker marker = Marker.ColoredCircle, Color color = Color.Black)
             where TFigure : Figure, new()
         {
-            _checkCommensurability(new [] {x, y, z});
             var fig = new TFigure {
                 Data = new DataPoints(x: x, y: y, z:z),
                 Properties =
@@ -328,7 +314,6 @@ namespace SharpPlot
             Marker marker = Marker.ColoredCircle, Color color = Color.Black)
             where TFigure : Figure, new()
         {
-            _checkCommensurability(new[] {ds[AxisName.X], ds[AxisName.Y]});
             var fig = new TFigure {
                 Data = new DataPoints(x: ds[AxisName.X], y: ds[AxisName.Y]), 
                 Properties =

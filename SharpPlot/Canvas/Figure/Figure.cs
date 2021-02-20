@@ -14,8 +14,6 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     
         #region Properties
-
-        protected internal virtual PlotType PlotType => PlotType.Plot;
         public FigureProperties Properties { get; protected internal set; } = new FigureProperties();
         protected internal virtual string PlotInit => " '-' ";
         internal string HeaderPlot => _getHeaderPlot();
@@ -78,23 +76,23 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     }
     
-    public class Scatter2D : Figure
+    public class Scatter : Figure
     {
         #region Methods
         protected override string _getOptions()
         {
-            return $"u 1:2 {Shape.Points} {Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
+            return $"u {Data.OptDim} {Shape.Points} {Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
         #endregion
 
     }
     
-    public class Line2D : Figure
+    public class Line : Figure
     {
         #region Methods
         protected override string _getOptions()
         {
-            return $"u 1:2 {Shape.Lines} {Properties.OptWidth} {Properties.OptDashType} {Properties.OptColor}";
+            return $"u {Data.OptDim} {Shape.Lines} {Properties.OptWidth} {Properties.OptDashType} {Properties.OptColor}";
         }
         #endregion
 
@@ -111,13 +109,13 @@ namespace SharpPlot.Canvas.Figure
         #endregion
     }
 
-    public class LinePoints2D : Figure
+    public class LinePoints : Figure
     {
         #region Methods
 
         protected override string _getOptions()
         {
-            return $"u 1:2 {Shape.LinesPoints} {Properties.OptWidth} {Properties.OptDashType} " +
+            return $"u {Data.OptDim} {Shape.LinesPoints} {Properties.OptWidth} {Properties.OptDashType} " +
                    $"{Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
 
@@ -132,53 +130,6 @@ namespace SharpPlot.Canvas.Figure
         {
             return $"u 1:2:3 {Shape.YErr} {Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
         }
-        #endregion
-    } 
-
-    public class Scatter3D : Figure
-    {
-        #region Properties
-        protected internal override PlotType PlotType => PlotType.Splot;
-        #endregion
-        
-        #region Methods
-        protected override string _getOptions()
-        {
-            return $"u 1:2:3 {Shape.Points} {Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
-        }
-        #endregion
-    }
-
-    public class Line3D : Figure
-    {
-        #region Properties
-        protected internal override PlotType PlotType => PlotType.Splot;
-        #endregion
-        
-        #region Methods
-
-        protected override string _getOptions()
-        {
-            return $"u 1:2:3 {Shape.Lines} {Properties.OptWidth} {Properties.OptDashType} {Properties.OptColor}";
-        }
-
-        #endregion
-    }
-    
-    public class LinePoints3D : Figure
-    {
-        #region Properties
-        protected internal override PlotType PlotType => PlotType.Splot;
-        #endregion
-        
-        #region Methods
-
-        protected override string _getOptions()
-        {
-            return $"u 1:2:3 {Shape.LinesPoints} {Properties.OptWidth} {Properties.OptDashType} " +
-                   $"{Properties.OptSize} {Properties.OptMarker} {Properties.OptColor}";
-        }
-
         #endregion
     }
 
