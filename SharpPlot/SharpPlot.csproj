@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <PackageId>SharpPlot</PackageId>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <Company>QNuboTech</Company>
         <Authors>
             Antonio Malpica (github::nonomalpi);
