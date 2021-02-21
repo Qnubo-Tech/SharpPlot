@@ -4,6 +4,7 @@ using System.Linq;
 using MathNet.Numerics;
 using MathNet.Numerics.Distributions;
 using NUnit.Framework;
+using SharpPlot.Canvas;
 using SharpPlot.Canvas.Figure;
 using SharpPlot.Utils;
 
@@ -13,14 +14,14 @@ namespace SharpPlot.UnitTest.Canvas
     public class TestFigure
     {
         private Figure _figure;
-        private Scatter2D _scatter2D;
-        private Scatter3D _scatter3D;
-        private Line2D _line2D;
+        private Scatter _scatter2D;
+        private Scatter _scatter3D;
+        private Line _line2D;
         private FilledCurves _filledCurves;
-        private LinePoints2D _linePoints2D;
+        private LinePoints _linePoints2D;
         private YError _yError;
-        private Line3D _line3D;
-        private LinePoints3D _linePoints3D;
+        private Line _line3D;
+        private LinePoints _linePoints3D;
         private Impulse _impulse;
         private Function _function;
         private Bars _bars;
@@ -38,25 +39,40 @@ namespace SharpPlot.UnitTest.Canvas
         {
             _figure = new Figure()
             {
-                ArrX = _x, ArrY = _y
+                Data = new DataPoints(x: _x, y: _y) 
             };
-            _scatter2D = new Scatter2D();
-            _scatter3D = new Scatter3D()
+            _scatter2D = new Scatter()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z
+                Data = new DataPoints(x: _x, y: _y)
             };
-            _line2D = new Line2D();
+            _scatter3D = new Scatter()
+            {
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
+            };
+            _line2D = new Line()
+            {
+                Data = new DataPoints(x: _x, y: _y)
+            };
             _filledCurves = new FilledCurves()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
-            _linePoints2D = new LinePoints2D();
+            _linePoints2D = new LinePoints()
+            {
+                Data = new DataPoints(x: _x, y: _y)
+            };
             _yError = new YError()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
             };
-            _line3D = new Line3D();
-            _linePoints3D = new LinePoints3D();
+            _line3D = new Line()
+            {
+                Data = new DataPoints(x: _x, y: _y, z: _z)
+            };
+            _linePoints3D = new LinePoints()
+            {
+                Data = new DataPoints(x: _x, y: _y, z: _z) 
+            };
             _impulse = new Impulse();
             _function = new Function()
             {
@@ -66,15 +82,15 @@ namespace SharpPlot.UnitTest.Canvas
             Normal.Samples(_array, mean: 0, stddev: 1);
             _histogram = new Histogram()
             {
-                ArrX = _array
+                Data = new DataPoints(x: _array) 
             };
             _boxplot = new Boxplot()
             {
-                ArrX = _array
+                Data = new DataPoints(x: _array)
             };
             _vector = new Vector()
             {
-                ArrX = _x, ArrY = _y, ArrZ1 = _z, ArrZ2 = _z
+                Data = new DataPoints(x1: _x, x2: _y, y1: _z, y2: _z) 
             };
             
         }
@@ -97,7 +113,7 @@ namespace SharpPlot.UnitTest.Canvas
             var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]}").ToList();
             expectedDataPoints.Add("e" + Environment.NewLine);
             Assert.AreEqual("", _figure.Options);
-            Assert.AreEqual(" '-'  title '' ",_figure.HeaderPlot);
+            Assert.AreEqual(" '-'  title ''",_figure.HeaderPlot);
             Assert.AreEqual( expectedDataPoints, _figure.DataPoints);
         }
 
@@ -152,24 +168,24 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestScatter2D()
         {
-            var expectedOps = $"u 1:2 with points ps {_scatter2D.Properties.Size} pt {(int) _scatter2D.Properties.Marker} " +
-                              $"lc rgb '{_scatter2D.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u {_scatter2D.Data.OptDim} {Shape.Points} {_scatter2D.Properties.OptSize} " +
+                              $"{_scatter2D.Properties.OptMarker} {_scatter2D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _scatter2D.Options);
         }
 
         [Test]
         public void TestLine2D()
         {
-            var expectedOps = $"u 1:2 with lines lw {_line2D.Properties.Width} dt {(int) _line2D.Properties.DashType} " +
-                              $"lc rgb '{_line2D.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u {_line2D.Data.OptDim} {Shape.Lines} {_line2D.Properties.OptWidth} " +
+                              $"{_line2D.Properties.OptDashType} {_line2D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _line2D.Options);
         }
 
         [Test]
         public void TestFilledCurves()
         {
-            var expectedOps = $"u 1:2:3 with filledcurve lw {_filledCurves.Properties.Width} " +
-                              $"dt {(int) _filledCurves.Properties.DashType} lc rgb '{_filledCurves.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u 1:2:3 {Shape.FilledCurve} {_filledCurves.Properties.OptWidth} " +
+                              $"{_filledCurves.Properties.OptDashType} {_filledCurves.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _filledCurves.Options);
             
             var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]}").ToList();
@@ -180,17 +196,17 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestLinePoints2D()
         {
-            var expectedOps = $"u 1:2 with linespoints lw {_linePoints2D.Properties.Width} dt {(int) _linePoints2D.Properties.DashType} " +
-                              $"ps {_linePoints2D.Properties.Size} pt {(int) _linePoints2D.Properties.Marker} " +
-                              $"lc rgb '{_linePoints2D.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u {_linePoints2D.Data.OptDim} {Shape.LinesPoints} {_linePoints2D.Properties.OptWidth} " +
+                              $"{_linePoints2D.Properties.OptDashType} {_linePoints2D.Properties.OptSize} " +
+                              $"{_linePoints2D.Properties.OptMarker} {_linePoints2D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _linePoints2D.Options);
         }
 
         [Test]
         public void TestYErr()
         {
-            var expectedOps = $"u 1:2:3 with yerr ps {_yError.Properties.Size} pt {(int) _yError.Properties.Marker} " +
-                              $"lc rgb '{_yError.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u 1:2:3 {Shape.YErr} {_yError.Properties.OptSize} {_yError.Properties.OptMarker} " +
+                              $"{_yError.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _yError.Options);
             
             var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]}").ToList();
@@ -201,10 +217,8 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestScatter3D()
         {
-            Assert.AreEqual(PlotType.Splot, _scatter3D.PlotType);
-            
-            var expectedOps = $"u 1:2:3 with points ps {_scatter3D.Properties.Size} pt {(int) _scatter3D.Properties.Marker} " +
-                              $"lc rgb '{_scatter3D.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u {_scatter3D.Data.OptDim} {Shape.Points} {_scatter3D.Properties.OptSize} " +
+                              $"{_scatter3D.Properties.OptMarker} {_scatter3D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _scatter3D.Options);
             
             var expectedDataPoints = _x.Select((t, idx) => $"{t} {_y[idx]} {_z[idx]}").ToList();
@@ -215,27 +229,25 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestLine3D()
         {
-            Assert.AreEqual(PlotType.Splot, _line3D.PlotType);
-            
-            var expectedOps = $"u 1:2:3 with lines lw {_line3D.Properties.Width} dt {(int) _line3D.Properties.DashType} " +
-                              $"lc rgb '{_line3D.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u {_line3D.Data.OptDim} {Shape.Lines} {_line3D.Properties.OptWidth} " +
+                              $"{_line3D.Properties.OptDashType} {_line3D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _line3D.Options);
         }
 
         [Test]
         public void TestLinePoints3D()
         {
-            var expectedOps = $"u 1:2:3 with linespoints lw {_linePoints3D.Properties.Width} dt {(int) _linePoints3D.Properties.DashType} " +
-                              $"ps {_linePoints3D.Properties.Size} pt {(int) _linePoints3D.Properties.Marker} " +
-                              $"lc rgb '{_linePoints3D.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u {_line3D.Data.OptDim} {Shape.LinesPoints} {_linePoints3D.Properties.OptWidth} {_linePoints3D.Properties.OptDashType} " +
+                              $"{_linePoints3D.Properties.OptSize} {_linePoints3D.Properties.OptMarker} " +
+                              $"{_linePoints3D.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _linePoints3D.Options);
         }
 
         [Test]
         public void TestImpulse()
         {
-            var expectedOps = $"u 1:2 with impulses lw {_impulse.Properties.Width} dt {(int) _impulse.Properties.DashType} " +
-                              $"lc rgb '{_impulse.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u 1:2 {Shape.Impulses} {_impulse.Properties.OptWidth} {_impulse.Properties.OptDashType} " +
+                              $"{_impulse.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _impulse.Options);
         }
 
@@ -246,25 +258,25 @@ namespace SharpPlot.UnitTest.Canvas
             Assert.AreEqual("", _function.PlotInit);
             Assert.AreEqual(new List<string>(), _function.DataPoints);
             
-            var expectedOps = $" {_function.Properties.Function} lc rgb '{_function.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $" {_function.Properties.Function} {_function.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _function.Options);
         }
 
         [Test]
         public void TestBars()
         {
-            var expectedOps = $"u 1:2:({_bars.Properties.Width}) with boxes lc rgb '{_bars.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u 1:2:({_bars.Properties.Width}) {Shape.Boxes} {_bars.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _bars.Options);
         }
 
         [Test]
         public void TestHistogram()
         {
-            var expectedOps = $"u 1:({_histogram.Properties.Width}) smooth freq with boxes " +
-                              $"lc rgb '{_histogram.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u 1:({_histogram.Properties.Width}) smooth freq {Shape.Boxes} " +
+                              $"{_histogram.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _histogram.Options);
 
-            var x = _histogram.ArrX;
+            var x = _histogram.Data.Array[0];
             var bins = Math.Min(Math.Ceiling(Math.Sqrt(x.Count())), 100.0);
             var width = (x.Max() - x.Min()) / bins;
             var expectedDataPoints = x.Select(e => $"{width * Math.Floor(e / width) + width / 2.0}").ToList();
@@ -275,11 +287,11 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestBoxplot()
         {
-            var expectedOps = $"u (0.0):1:({_boxplot.Properties.Width}) pt {(int) _boxplot.Properties.Marker} " +
-                             $"lc rgb '{_boxplot.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u (0.0):1:({_boxplot.Properties.Width}) {_boxplot.Properties.OptMarker} " +
+                             $"{_boxplot.Properties.OptColor}";
             Assert.AreEqual(expectedOps, _boxplot.Options);
             
-            var expectedDataPoints = _histogram.ArrX.Select(t => $"{t}").ToList();
+            var expectedDataPoints = _histogram.Data.Array[0].Select(t => $"{t}").ToList();
             expectedDataPoints.Add("e" + Environment.NewLine);
             Assert.AreEqual(expectedDataPoints, _boxplot.DataPoints);
         }
@@ -287,8 +299,8 @@ namespace SharpPlot.UnitTest.Canvas
         [Test]
         public void TestVector()
         {
-            var expectedOps = $"u 1:2:3:4 with vector lw {_vector.Properties.Width} " +
-                              $"lc rgb '{_vector.Properties.Color.ToString().ToLower()}'";
+            var expectedOps = $"u 1:2:3:4 {Shape.Vector} {_vector.Properties.OptWidth} " +
+                              $"{_vector.Properties.OptColor}";
             
             Assert.AreEqual(expectedOps, _vector.Options);
             
