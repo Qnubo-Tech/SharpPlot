@@ -105,6 +105,7 @@ We think the best way to learn is by example and documentation. For this reason,
 
 * [001-GettingStarted](Examples/001-GettingStarted): The example we have followed in the previous section, with a little README file, and a Jupyter notebook!
 * [002-FigureProperties](Examples/002-FigureProperties): An introduction to the properties that can be modified for each Figure.
+* [003-Axis](Examples/003-Axis): How to customise the Axis range, ticks and labels.
 
 ## Authors
 
